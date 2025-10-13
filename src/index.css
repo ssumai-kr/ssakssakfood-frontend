@@ -64,11 +64,31 @@
   html {
     font-family: var(--font-sans);
   }
+  #root {
+    overflow: hidden;
+  }
+  body {
+    overscroll-behavior-y: none;
+  }
+  body::-webkit-scrollbar {
+    /* Chrome/Safari */
+    display: none;
+  }
 }
 
 @layer utilities {
   .font-inter {
     font-family: var(--font-inter);
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    background: transparent;
   }
 
   .head1 {

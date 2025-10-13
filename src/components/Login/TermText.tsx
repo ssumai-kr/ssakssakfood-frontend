@@ -1,3 +1,6 @@
+import CheckFull from "@assets/icons/check-full.svg";
+import CheckC from "@assets/icons/check-circle.svg";
+
 interface TermTextProps {
   text: string;
   onClick?: () => void;
@@ -13,7 +16,7 @@ export default function TermText({
     <div className="flex pl-4 justify-between items-center self-stretch">
       <div className="flex">
         <img
-          src={checked ? "icons/check-full.svg" : "/icons/check-circle.svg"}
+          src={checked ? CheckFull : CheckC}
           alt=""
           className="pr-2"
           onClick={onClick}

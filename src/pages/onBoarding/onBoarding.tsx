@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import InputField2 from "../../components/InputField2";
 import { ProgressBar } from "../../components/ProgressBar";
-
+import ChevronL from "@assets/icons/chevron-left.svg";
 import { useOnboardingState } from "../../store/useOnboardingStore";
 import { useState } from "react";
 import { useNicknameCheck } from "../../api/mamber/onboarding";
@@ -42,7 +42,7 @@ export default function OnBoardingPage() {
       <section className="flex-1 ">
         <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
           <img
-            src="/icons/chevron-left.svg"
+            src={ChevronL}
             alt="뒤로가기"
             className=" absolute left-0 cursor-pointer"
             onClick={() => navigate(-1)}

@@ -9,6 +9,10 @@ import OnBoardingPage from "./pages/onBoarding/onBoarding";
 import OnBoardingPassPage from "./pages/onBoarding/onBoardingPass";
 import SearchResultPage from "./pages/SearchResult/SearchResultPage";
 import NearByPage from "./pages/NearBy/NearByPage";
+import LocationEdit from "./pages/Location/LocationEdit";
+import LocationSearch from "./pages/Location/LocationSearch";
+import LocationMap from "./pages/Location/LocationMap";
+import PxLayout from "./layout/PxLayoyt";
 
 const router = createBrowserRouter([
   {
@@ -20,13 +24,23 @@ const router = createBrowserRouter([
       { path: "nearby", element: <NearByPage /> },
     ],
   },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/term", element: <TermPage /> },
-  { path: "*", element: <ErrorPage /> },
-  // 온보딩
-  { path: "/onBoarding", element: <OnBoardingPage /> },
-  { path: "/onBoardingConfirm", element: <OnBoardingConfirmPage /> },
-  { path: "/onBoardingPassPage", element: <OnBoardingPassPage /> },
+  {
+    path: "/",
+    element: <PxLayout />,
+    children: [
+      { path: "/login", element: <LoginPage /> },
+      { path: "/term", element: <TermPage /> },
+      { path: "*", element: <ErrorPage /> },
+      // 온보딩
+      { path: "/onBoarding", element: <OnBoardingPage /> },
+      { path: "/onBoardingConfirm", element: <OnBoardingConfirmPage /> },
+      { path: "/onBoardingPassPage", element: <OnBoardingPassPage /> },
+      //위치수정
+      { path: "/location/edit", element: <LocationEdit /> },
+      { path: "/location/search", element: <LocationSearch /> },
+      { path: "/location/map", element: <LocationMap /> },
+    ],
+  },
 ]);
 
 export default router;

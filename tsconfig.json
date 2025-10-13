@@ -19,7 +19,8 @@
     /* ✅ 경로 별칭 설정 */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "exclude": ["node_modules"]

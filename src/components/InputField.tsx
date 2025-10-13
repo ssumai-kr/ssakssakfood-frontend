@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 import type { FieldValues, UseFormRegister } from "react-hook-form";
-
+import CloseEye from "@/assets/icons/close-eye.svg";
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   errorMsg?: string | undefined;
@@ -32,7 +32,7 @@ export default function InputField({
       />
       {icon && (
         <div className="absolute right-3 top-4 ">
-          <img src="/icons/close-eye.svg" alt="" />
+          <img src={CloseEye} alt="" />
         </div>
       )}
     </div>

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Button from "../../components/Button";
-import TermText from "./TermText";
+import TermText from "../../components/Login/TermText";
 import { useNavigate } from "react-router-dom";
+import ChevronL from "@assets/icons/chevron-left.svg";
+import CheckFull from "@assets/icons/check-full.svg";
+import CheckC from "@assets/icons/check-circle.svg";
 
 export default function TermPage() {
   const [serviceAgree, setServiceAgree] = useState<boolean>(false);
@@ -24,11 +27,7 @@ export default function TermPage() {
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">
         <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
-          <img
-            src="/icons/chevron-left.svg"
-            alt="뒤로가기"
-            className=" absolute left-0"
-          />
+          <img src={ChevronL} alt="뒤로가기" className=" absolute left-0" />
           <p className="subtitle-b-18 text-center">서비스 이용 동의</p>
         </header>
         <div className="text-2xl font-bold mb-8">
@@ -38,9 +37,7 @@ export default function TermPage() {
         <section className="flex flex-col items-center gap-6">
           <div className="bg-grey-5 rounded-lg flex gap-2 w-full p-4">
             <img
-              src={
-                allChecked ? "/icons/check-full.svg" : "/icons/check-circle.svg"
-              }
+              src={allChecked ? CheckFull : CheckC}
               alt="약관 동의"
               className="pr-2"
               onClick={allTermAgree}

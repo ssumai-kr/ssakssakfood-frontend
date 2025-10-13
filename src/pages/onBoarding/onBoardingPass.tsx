@@ -8,7 +8,9 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import type { UserSignUpRequestDto } from "../../types/onboarding";
 import { onBoardingSignup } from "../../api/mamber/onboarding";
-
+import ChevronL from "@assets/icons/chevron-left.svg";
+import CheckFullB from "@assets/icons/check-full-blue.svg";
+import Check from "@assets/icons/check.svg";
 export default function OnBoardingPassPage() {
   const navigate = useNavigate();
 
@@ -76,7 +78,7 @@ export default function OnBoardingPassPage() {
       <section className="flex-1 ">
         <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
           <img
-            src="/icons/chevron-left.svg"
+            src={ChevronL}
             alt="뒤로가기"
             className=" absolute left-0 cursor-pointer"
             onClick={() => navigate(-1)}
@@ -119,11 +121,7 @@ export default function OnBoardingPassPage() {
               <div className="flex gap-2 items-center">
                 {
                   <img
-                    src={
-                      noSpacePattern
-                        ? "/icons/check-full-blue.svg"
-                        : "/icons/check.svg"
-                    }
+                    src={noSpacePattern ? CheckFullB : Check}
                     alt=""
                     className="mb-1"
                   />
@@ -136,9 +134,7 @@ export default function OnBoardingPassPage() {
               </div>
               <div className="flex gap-2 items-center">
                 <img
-                  src={
-                    pattern2 ? "/icons/check-full-blue.svg" : "/icons/check.svg"
-                  }
+                  src={pattern2 ? CheckFullB : Check}
                   alt=""
                   className="mb-1"
                 />
