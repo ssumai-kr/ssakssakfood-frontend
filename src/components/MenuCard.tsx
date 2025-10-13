@@ -1,8 +1,9 @@
-//메뉴 리스트에 보이는 메뉴 카드 컴포넌트
 import mockImg from "@/assets/bread.svg";
 import StockBadge from "./StockBadge";
+import { useNavigate } from "react-router-dom";
 
-interface MenuCardprops {
+interface MenuCardProps {
+  id: number; // ✅ 메뉴 ID 추가
   title: string;
   storeName: string;
   pickupTime: string;
@@ -13,6 +14,7 @@ interface MenuCardprops {
 }
 
 export default function MenuCard({
+  id,
   title,
   storeName,
   pickupTime,
@@ -20,9 +22,15 @@ export default function MenuCard({
   salePrice,
   discountRate,
   stockCount,
-}: MenuCardprops) {
+}: MenuCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/menu/${id}`);
+  };
+
   return (
-    <div className="flex gap-[18px] cursor-pointer">
+    <div className="flex gap-[18px] cursor-pointer" onClick={handleClick}>
       <div className="relative w-[100px] h-[100px] flex-shrink-0">
         <img
           src={mockImg}

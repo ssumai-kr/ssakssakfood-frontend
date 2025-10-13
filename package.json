@@ -22,8 +22,7 @@
     "ssakssakfood": "link:",
     "zustand": "^5.0.8",
     "react-slick": "^0.31.0",
-    "slick-carousel": "^1.8.1",
-    "ssakssakfood": "link:"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

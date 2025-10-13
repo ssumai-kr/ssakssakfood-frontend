@@ -190,3 +190,23 @@
 .slick-dots li.slick-active button:before {
   color: gray; /* 활성화된 dot 색상 */
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.flex-scroll-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.flex-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

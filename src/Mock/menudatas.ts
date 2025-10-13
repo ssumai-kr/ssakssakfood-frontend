@@ -1,6 +1,7 @@
 export const MENUS = [
   // 🥖 breads
   {
+    id: 1,
     title: "식빵",
     storeName: "파리바게뜨",
     pickupTime: "10:00 ~ 12:00",
@@ -9,8 +10,10 @@ export const MENUS = [
     discountRate: 22,
     stockCount: 5,
     slug: "breads",
+    location: "서울특별시 강서구 화곡로 142",
   },
   {
+    id: 2,
     title: "크루아상 3개입",
     storeName: "뚜쥬루과자점",
     pickupTime: "14:00 ~ 16:00",
@@ -19,8 +22,10 @@ export const MENUS = [
     discountRate: 33,
     stockCount: 8,
     slug: "breads",
+    location: "서울특별시 강서구 등촌로 153",
   },
   {
+    id: 3,
     title: "앙버터빵",
     storeName: "브레드샵",
     pickupTime: "11:00 ~ 13:00",
@@ -29,10 +34,12 @@ export const MENUS = [
     discountRate: 33,
     stockCount: 3,
     slug: "breads",
+    location: "서울특별시 강서구 염창로 215",
   },
 
   // 🍱 packedmeal
   {
+    id: 4,
     title: "닭가슴살 도시락",
     storeName: "헬린푸드",
     pickupTime: "12:00 ~ 14:00",
@@ -41,8 +48,10 @@ export const MENUS = [
     discountRate: 30,
     stockCount: 10,
     slug: "packedmeal",
+    location: "서울특별시 강서구 마곡중앙로 161",
   },
   {
+    id: 5,
     title: "연어덮밥",
     storeName: "오도시락",
     pickupTime: "11:30 ~ 13:00",
@@ -51,8 +60,10 @@ export const MENUS = [
     discountRate: 26,
     stockCount: 6,
     slug: "packedmeal",
+    location: "서울특별시 강서구 공항대로 247",
   },
   {
+    id: 6,
     title: "불고기 정식",
     storeName: "한솥도시락",
     pickupTime: "17:00 ~ 19:00",
@@ -61,10 +72,12 @@ export const MENUS = [
     discountRate: 24,
     stockCount: 12,
     slug: "packedmeal",
+    location: "서울특별시 강서구 강서로 54길 21",
   },
 
   // 🧂 ingredients
   {
+    id: 7,
     title: "유기농 달걀 10구",
     storeName: "그린마켓",
     pickupTime: "09:00 ~ 11:00",
@@ -73,8 +86,10 @@ export const MENUS = [
     discountRate: 29,
     stockCount: 20,
     slug: "ingredients",
+    location: "서울특별시 강서구 우장산로 86",
   },
   {
+    id: 8,
     title: "국산 두부 3팩 세트",
     storeName: "채식상점",
     pickupTime: "10:00 ~ 12:00",
@@ -83,8 +98,10 @@ export const MENUS = [
     discountRate: 33,
     stockCount: 9,
     slug: "ingredients",
+    location: "서울특별시 강서구 등촌로 101",
   },
   {
+    id: 9,
     title: "신선 채소 믹스팩",
     storeName: "로컬파머스",
     pickupTime: "15:00 ~ 17:00",
@@ -93,10 +110,12 @@ export const MENUS = [
     discountRate: 25,
     stockCount: 14,
     slug: "ingredients",
+    location: "서울특별시 강서구 양천로 583",
   },
 
   // 🍛 restaurant
   {
+    id: 10,
     title: "된장찌개 정식",
     storeName: "우리식당",
     pickupTime: "18:00 ~ 20:00",
@@ -105,8 +124,10 @@ export const MENUS = [
     discountRate: 33,
     stockCount: 4,
     slug: "restaurant",
+    location: "서울특별시 강서구 화곡로 180",
   },
   {
+    id: 11,
     title: "치즈돈까스",
     storeName: "맛나분식",
     pickupTime: "17:00 ~ 19:00",
@@ -115,8 +136,10 @@ export const MENUS = [
     discountRate: 26,
     stockCount: 7,
     slug: "restaurant",
+    location: "서울특별시 강서구 방화대로 62",
   },
   {
+    id: 12,
     title: "제육덮밥",
     storeName: "정민식당",
     pickupTime: "11:30 ~ 13:30",
@@ -125,10 +148,12 @@ export const MENUS = [
     discountRate: 29,
     stockCount: 8,
     slug: "restaurant",
+    location: "서울특별시 강서구 화곡로 196",
   },
 
   // 🏪 market
   {
+    id: 13,
     title: "귤 1kg",
     storeName: "과일마켓365",
     pickupTime: "09:00 ~ 11:00",
@@ -137,8 +162,10 @@ export const MENUS = [
     discountRate: 31,
     stockCount: 15,
     slug: "market",
+    location: "서울특별시 강서구 염창로 287",
   },
   {
+    id: 14,
     title: "방울토마토 500g",
     storeName: "신선마트",
     pickupTime: "10:00 ~ 12:00",
@@ -147,10 +174,12 @@ export const MENUS = [
     discountRate: 29,
     stockCount: 9,
     slug: "market",
+    location: "서울특별시 강서구 등촌로 211",
   },
 
   // 🏪 convenience
   {
+    id: 15,
     title: "샌드위치 세트",
     storeName: "CU 화곡점",
     pickupTime: "08:00 ~ 10:00",
@@ -159,8 +188,10 @@ export const MENUS = [
     discountRate: 28,
     stockCount: 6,
     slug: "convenience",
+    location: "서울특별시 강서구 화곡로 164",
   },
   {
+    id: 16,
     title: "삼각김밥 3종",
     storeName: "GS25 강서점",
     pickupTime: "07:00 ~ 09:00",
@@ -169,10 +200,12 @@ export const MENUS = [
     discountRate: 28,
     stockCount: 10,
     slug: "convenience",
+    location: "서울특별시 강서구 등촌로 139",
   },
 
   // 🤝 sharing
   {
+    id: 17,
     title: "포테이토 피자 R",
     storeName: "피자마루",
     pickupTime: "21:00 ~ 22:00",
@@ -181,8 +214,10 @@ export const MENUS = [
     discountRate: 62,
     stockCount: 2,
     slug: "sharing",
+    location: "서울특별시 강서구 방화대로 94",
   },
   {
+    id: 18,
     title: "오늘 만든 샐러드 남은분",
     storeName: "헬시그린",
     pickupTime: "20:00 ~ 22:00",
@@ -191,10 +226,12 @@ export const MENUS = [
     discountRate: 64,
     stockCount: 3,
     slug: "sharing",
+    location: "서울특별시 강서구 마곡중앙로 181",
   },
 
   // 🛒 ssakssakstore
   {
+    id: 19,
     title: "리유저블 텀블러",
     storeName: "싹싹스토어",
     pickupTime: "상시 수령",
@@ -203,8 +240,10 @@ export const MENUS = [
     discountRate: 25,
     stockCount: 12,
     slug: "ssakssakstore",
+    location: "서울특별시 강서구 공항대로 247",
   },
   {
+    id: 20,
     title: "에코백",
     storeName: "싹싹스토어",
     pickupTime: "상시 수령",
@@ -213,5 +252,42 @@ export const MENUS = [
     discountRate: 25,
     stockCount: 15,
     slug: "ssakssakstore",
+    location: "서울특별시 강서구 공항대로 247",
+  },
+  {
+    id: 21,
+    title: "바게트 빵",
+    storeName: "파리바게뜨",
+    pickupTime: "10:00 ~ 12:00",
+    originalPrice: 5000,
+    salePrice: 2500,
+    discountRate: 50,
+    stockCount: 5,
+    slug: "breads",
+    location: "서울특별시 강서구 화곡로 142",
+  },
+  {
+    id: 22,
+    title: "소보루 빵",
+    storeName: "파리바게뜨",
+    pickupTime: "10:00 ~ 12:00",
+    originalPrice: 2000,
+    salePrice: 1000,
+    discountRate: 50,
+    stockCount: 4,
+    slug: "breads",
+    location: "서울특별시 강서구 화곡로 142",
+  },
+  {
+    id: 23,
+    title: "크림빵",
+    storeName: "파리바게뜨",
+    pickupTime: "10:00 ~ 12:00",
+    originalPrice: 2000,
+    salePrice: 1000,
+    discountRate: 50,
+    stockCount: 4,
+    slug: "breads",
+    location: "서울특별시 강서구 화곡로 142",
   },
 ];

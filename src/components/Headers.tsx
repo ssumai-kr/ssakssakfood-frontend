@@ -31,6 +31,7 @@ export function MenuHeader({ title }: HeaderProps) {
 
 //홈 화면에서 현재 위치 or 설정 위치를 보여주는 Header
 export function LocationHeader({ location }: LocationHeaderProps) {
+  const navigate = useNavigate();
   return (
     <header className="">
       <div className="flex items-center gap-[8px] py-4 px-[16px]">
@@ -40,6 +41,7 @@ export function LocationHeader({ location }: LocationHeaderProps) {
           src={chevronDownImg}
           alt="지역 설정"
           className="ml-auto cursor-pointer"
+          onClick={() => navigate("/location/search")}
         />
       </div>
     </header>

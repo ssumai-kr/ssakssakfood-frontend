@@ -25,9 +25,10 @@ export default function SearchResultPage() {
 
       {filteredMenus.length > 0 ? (
         <div className="flex flex-col gap-[24px]">
-          {filteredMenus.map((menu, idx) => (
+          {filteredMenus.map((menu) => (
             <MenuCard
-              key={idx}
+              key={menu.id}
+              id={menu.id}
               title={menu.title}
               storeName={menu.storeName}
               pickupTime={menu.pickupTime}
