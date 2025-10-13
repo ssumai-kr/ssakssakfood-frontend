@@ -39,44 +39,50 @@ export default function LocationSearch() {
   const mode = location.state?.mode ?? "fill-only";
 
   const isFetchingRef = useRef(false);
-  const fetchPlaces = async (newPage = 1, isNewSearch = false) => {
-    try {
-      isFetchingRef.current = true;
-      setIsLoading(true);
-      const res = await axios.get(
-        "https://dapi.kakao.com/v2/local/search/keyword.json",
-        {
-          headers: {
-            Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_SEARCH_KEY}`,
+  const fetchPlaces = useCallback(
+    async (newPage = 1, isNewSearch = false) => {
+      try {
+        isFetchingRef.current = true;
+        setIsLoading(true);
+
+        const res = await axios.get(
+          "https://dapi.kakao.com/v2/local/search/keyword.json",
+          {
+            headers: {
+              Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_SEARCH_KEY}`,
+            },
+            params: {
+              query: debouncedInput,
+              page: newPage,
+              size: 15,
+            },
           },
-          params: {
-            query: debouncedInput,
-            page: newPage,
-            size: 15,
-          },
+        );
+
+        const newResults = res.data.documents;
+        const totalCount = res.data.meta.total_count;
+
+        setResults((prev) =>
+          isNewSearch ? newResults : [...prev, ...newResults],
+        );
+        setHasMore(newPage * 15 < totalCount);
+        setPage(newPage);
+
+        if (isNewSearch) {
+          setSelectedId(null);
         }
-      );
-      // console.log(res);
 
-      const newResults = res.data.documents;
-      const totalCount = res.data.meta.total_count;
-
-      setResults((prev) =>
-        isNewSearch ? newResults : [...prev, ...newResults]
-      );
-      setHasMore(newPage * 15 < totalCount);
-      setPage(newPage);
-      if (isNewSearch) {
-        setSelectedId(null);
+        console.log(newResults);
+      } catch (err) {
+        console.error("Error fetching places", err);
+      } finally {
+        setIsLoading(false);
+        isFetchingRef.current = false;
       }
-      console.log(newResults);
-    } catch (err) {
-      console.error("Erorr fetching places", err);
-    } finally {
-      setIsLoading(false);
-      isFetchingRef.current = false;
-    }
-  };
+    },
+    [debouncedInput],
+  );
+
   useEffect(() => {
     if (!debouncedInput.trim()) {
       setResults([]);
@@ -85,7 +91,7 @@ export default function LocationSearch() {
       return;
     }
     fetchPlaces(1, true);
-  }, [debouncedInput]);
+  }, [debouncedInput, fetchPlaces]);
 
   const lastResultRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -93,13 +99,14 @@ export default function LocationSearch() {
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !isFetchingRef.current) {
           fetchPlaces(page + 1);
         }
       });
+
       if (node) observer.current.observe(node);
     },
-    [isLoading, hasMore, page, debouncedInput]
+    [isLoading, hasMore, page, fetchPlaces],
   );
 
   const onClickCurrent = () => {
@@ -121,7 +128,7 @@ export default function LocationSearch() {
               x: longitude,
               y: latitude,
             },
-          }
+          },
         );
 
         const addressInfo = res.data.documents?.[0]?.address;
@@ -135,7 +142,7 @@ export default function LocationSearch() {
           `/location/map?x=${longitude}&y=${latitude}&place=${encodeURIComponent(place)}&address=${encodeURIComponent(address)}&query=${encodeURIComponent(input ?? "")}`,
           {
             state: { mode: "call-api" },
-          }
+          },
         );
       } catch (err) {
         console.error("주소 정보 가져오기 실패", err);

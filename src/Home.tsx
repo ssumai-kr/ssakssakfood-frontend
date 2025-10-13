@@ -2,8 +2,6 @@ import React, { useMemo } from "react";
 import { MENUS } from "@/Mock/menudatas"; // 최대 할인율로 가져올 메뉴 더미 데이터
 import { CATEGORY } from "./constants/Category";
 import MenuCard from "./components/MenuCard";
-import { MenuHeader } from "./components/Headers";
-import StockBadge from "./components/StockBadge";
 import Carousel from "./components/Carousel";
 
 const Home: React.FC = () => {

@@ -36,7 +36,7 @@ export default function LocationList({
         state: {
           mode: "call-api",
         },
-      }
+      },
     );
     console.log(`지도에서 보기 클릭: ${place}, ${address}`);
   };

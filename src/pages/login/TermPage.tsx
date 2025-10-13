@@ -31,7 +31,7 @@ export default function TermPage() {
           <p className="subtitle-b-18 text-center">서비스 이용 동의</p>
         </header>
         <div className="text-2xl font-bold mb-8">
-          <p>"싹싹푸드" 사용을 위한</p>
+          <p>&quot;싹싹푸드&quot; 사용을 위한</p>
           <p>약관 동의가 필요해요</p>
         </div>
         <section className="flex flex-col items-center gap-6">

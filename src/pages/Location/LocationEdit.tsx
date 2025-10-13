@@ -41,7 +41,7 @@ export default function LocationEdit() {
   console.log(myLocationData, "겟");
 
   const notPrimary = myLocationData?.filter(
-    (item: myLocationResponseDto) => !item.isPrimary
+    (item: myLocationResponseDto) => !item.isPrimary,
   );
   console.log(notPrimary, "p아닌거");
 
