@@ -1,4 +1,4 @@
-import chevronRight from "@/assets/chevron-right.png";
+import chevronRight from "@/assets/images/chevron-right.png";
 
 //가게 정보 카드 컴포넌트
 interface StoreInfoCardProps {

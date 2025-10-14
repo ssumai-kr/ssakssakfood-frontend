@@ -1,6 +1,6 @@
 //Header Components
-import locatoinImg from "@/assets/location.svg";
-import chevronDownImg from "@/assets/chevron-down.svg";
+import locatoinImg from "@/assets/icons/location.svg";
+import chevronDownImg from "@/assets/icons/chevron-down.svg";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {

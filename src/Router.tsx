@@ -46,14 +46,6 @@ const router = createBrowserRouter([
   },
   //메뉴 상세 페이지
   { path: "menu/:id", element: <MenuDetailPage /> },
-
-  { path: "/login", element: <LoginPage /> },
-  { path: "/term", element: <TermPage /> },
-  { path: "*", element: <ErrorPage /> },
-  // 온보딩
-  { path: "/onBoarding", element: <OnBoardingPage /> },
-  { path: "/onBoardingConfirm", element: <OnBoardingConfirmPage /> },
-  { path: "/onBoardingPassPage", element: <OnBoardingPassPage /> },
 ]);
 
 export default router;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchIcon from "@/assets/search-md.svg";
-import Xcircle from "@/assets/x-circle.svg";
+import SearchIcon from "@/assets/icons/search-md.svg";
+import Xcircle from "@/assets/icons/x-circle.svg";
 
 interface SearchInputProps {
   className?: string;

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import Minus from "@/assets/minus.svg";
-import Plus from "@/assets/plus.svg";
+import Minus from "@/assets/icons/minus.svg";
+import Plus from "@/assets/icons/plus.svg";
 
 interface OrderBottomSheetProps {
   isOpen: boolean;

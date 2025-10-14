@@ -1,4 +1,4 @@
-import mockImg from "@/assets/bread.svg";
+import mockImg from "@/assets/icons/bread.svg";
 import StockBadge from "./StockBadge";
 import { useNavigate } from "react-router-dom";
 

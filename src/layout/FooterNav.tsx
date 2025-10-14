@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import home from "@/assets/home-line.svg";
-import homeActive from "@/assets/home-line-active.svg";
-import location from "@/assets/location-nav.svg";
-import locationActive from "@/assets/location-active.svg";
-import receipt from "@/assets/receipt.svg";
-import receiptActive from "@/assets/receipt-active.svg";
-import mypage from "@/assets/user.svg";
-import mypageActive from "@/assets/user-active.svg";
+import home from "@/assets/icons/home-line.svg";
+import homeActive from "@/assets/icons/home-line-active.svg";
+import location from "@/assets/icons/location-nav.svg";
+import locationActive from "@/assets/icons/location-active.svg";
+import receipt from "@/assets/icons/receipt.svg";
+import receiptActive from "@/assets/icons/receipt-active.svg";
+import mypage from "@/assets/icons/user.svg";
+import mypageActive from "@/assets/icons/user-active.svg";
 
 export default function FooterNav() {
   const navigate = useNavigate();

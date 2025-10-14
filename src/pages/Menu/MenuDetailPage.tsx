@@ -5,7 +5,7 @@ import StockBadge from "@/components/StockBadge";
 import StoreInfoCard from "@/components/StoreInfoCard";
 import MenuCard from "@/components/MenuCard";
 import Button from "@/components/Button";
-import chevronLeft from "@/assets/floating-checvron-left.svg";
+import chevronLeft from "@/assets/icons/floating-checvron-left.svg";
 import OrderBottomSheet from "./UI/OrderBottomSheet";
 
 const CATEGORY_LABEL_MAP = {

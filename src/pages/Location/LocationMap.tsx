@@ -5,7 +5,7 @@ import Button from "../../components/Button";
 import type { gpsLocationSavedRequest } from "../../types/location";
 import ChevronL from "@assets/icons/chevron-left.svg";
 import Search from "@assets/icons/search.svg?react";
-import Marker from "@/assets/icons/marker.svg?url";
+import Marker from "@/assets/icons/map-marker.svg?url";
 
 declare global {
   interface Window {
@@ -84,7 +84,7 @@ export default function LocationMap() {
         <p className="subtitle-b-18 text-center">위치관리</p>
       </header>
 
-      <div ref={mapRef} className="flex-1 relative  max-w-[401px] bg-red-400">
+      <div ref={mapRef} className="flex-1 relative  max-w-[401px] ">
         <div
           className="absolute  flex items-center gap-2 top-0 left-1/2 -translate-x-1/2 w-full h-11 pr-3 py-4  bg-white z-50 cursor-pointer "
           onClick={() => navigate(-1)}
