@@ -2,21 +2,20 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import InputField2 from "../../components/InputField2";
 import { ProgressBar } from "../../components/ProgressBar";
-import ChevronL from "@assets/icons/chevron-left.svg";
 import { useOnboardingState } from "../../store/useOnboardingStore";
 import { useState } from "react";
 import { useNicknameCheck } from "../../api/mamber/onboarding";
+import PageHeader from "@/components/PageHeader";
 
 export default function OnBoardingPage() {
   const [nicknameValue, setNickname] = useState<string>("");
   const navigate = useNavigate();
 
+  const { setTemp } = useOnboardingState();
   const handleNext = () => {
     setTemp({ nickname: nicknameValue });
-    navigate("/onBoardingConfirm");
+    navigate("/onBoarding/confirm");
   };
-
-  const { setTemp } = useOnboardingState();
 
   const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -40,16 +39,8 @@ export default function OnBoardingPage() {
   return (
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">
-        <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
-          <img
-            src={ChevronL}
-            alt="뒤로가기"
-            className=" absolute left-0 cursor-pointer"
-            onClick={() => navigate(-1)}
-          />
-          <p className="subtitle-b-18 text-center">회원가입</p>
-        </header>
-        <ProgressBar width="88" className="mb-8" />
+        <PageHeader title="회원가입" />
+        <ProgressBar step={1} className="my-8" />
         <section className="flex flex-col gap-6">
           <p className="text-2xl font-bold ">닉네임을 입력해주세요</p>
           <div className="flex items-center gap-2 mb-3">
@@ -71,9 +62,11 @@ export default function OnBoardingPage() {
           </div>
         </section>
         {data && (
-          <p className="body-r-14 text-main2 p">
+          <p
+            className={`body-r-14 ${nicknameCheck ? "text-red" : "text-main2"} p`}
+          >
             {nicknameCheck
-              ? "이미 사용중인 닉네임이 있습니다."
+              ? "이미 사용중인 닉네임입니다."
               : "사용 가능한 닉네임입니다."}
           </p>
         )}

@@ -1,4 +1,3 @@
-import ChevronL from "@assets/icons/chevron-left.svg";
 import SearchLocationBtn from "../../components/Location/SearchLocationBtn";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import LocationList from "../../components/Location/LocationListItem";
@@ -8,6 +7,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 import axios from "axios";
 import { postLocation } from "../../api/location/location";
 import SearchIcon from "@/assets/icons/search.svg?url";
+import PageHeader from "@/components/PageHeader";
 
 export interface Place {
   place_name: string;
@@ -186,15 +186,7 @@ export default function LocationSearch() {
   };
   return (
     <div className="w-full flex flex-col ">
-      <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
-        <img
-          src={ChevronL}
-          alt="뒤로가기"
-          className=" absolute left-0 cursor-pointer"
-          onClick={() => navigate(-1)}
-        />
-        <p className="subtitle-b-18 text-center">위치관리</p>
-      </header>
+      <PageHeader title="위치관리" />
 
       <div className="flex ">
         <button className="cursor-pointer">

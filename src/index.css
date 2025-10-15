@@ -8,6 +8,7 @@
   --font-roboto: "Roboto", "sans-serif";
 
   /* 브레이크 포인트 */
+  --breakpoint-xxs: 370px;
   --breakpoint-xs: 390px;
   --breakpoint-sm: 720px;
   --breakpoint-md: 1080px;
@@ -58,6 +59,7 @@
   --color-grey-2: #7f7f7f;
   --color-grey-1: #3b3b3b;
   --color-black: #252525;
+  --color-red: #f30000;
 }
 
 @layer base {

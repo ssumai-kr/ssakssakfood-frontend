@@ -3,9 +3,9 @@ import { postGpsLocation } from "../../api/location/location";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../../components/Button";
 import type { gpsLocationSavedRequest } from "../../types/location";
-import ChevronL from "@assets/icons/chevron-left.svg";
 import Search from "@assets/icons/search.svg?react";
 import Marker from "@/assets/icons/map-marker.svg?url";
+import PageHeader from "@/components/PageHeader";
 
 declare global {
   interface Window {
@@ -74,15 +74,7 @@ export default function LocationMap() {
 
   return (
     <div className="flex flex-col h-dvh max-w-[401px] overflow-y-hidden relative">
-      <header className="h-12 relative flex items-center self-stretch justify-center">
-        <img
-          src={ChevronL}
-          alt="뒤로가기"
-          className=" absolute left-0 cursor-pointer"
-          onClick={() => navigate(-1)}
-        />
-        <p className="subtitle-b-18 text-center">위치관리</p>
-      </header>
+      <PageHeader title="위치관리" />
 
       <div ref={mapRef} className="flex-1 relative  max-w-[401px] ">
         <div

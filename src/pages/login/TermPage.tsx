@@ -26,11 +26,11 @@ export default function TermPage() {
   return (
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">
-        <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
+        <header className="h-12 relative flex items-center self-stretch justify-center">
           <img src={ChevronL} alt="뒤로가기" className=" absolute left-0" />
           <p className="subtitle-b-18 text-center">서비스 이용 동의</p>
         </header>
-        <div className="text-2xl font-bold mb-8">
+        <div className="text-2xl font-bold my-8 ">
           <p>&quot;싹싹푸드&quot; 사용을 위한</p>
           <p>약관 동의가 필요해요</p>
         </div>

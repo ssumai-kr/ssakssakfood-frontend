@@ -1,4 +1,3 @@
-import ChevronL from "@assets/icons/chevron-left.svg";
 import { useNavigate } from "react-router-dom";
 import { LocationField } from "../../components/Location/LocationField";
 import SearchLocationBtn from "../../components/Location/SearchLocationBtn";
@@ -10,6 +9,7 @@ import {
   usePatchLocation,
 } from "../../api/location/location";
 import type { myLocationResponseDto } from "../../types/location";
+import PageHeader from "@/components/PageHeader";
 
 export default function LocationEdit() {
   const navigate = useNavigate();
@@ -55,15 +55,7 @@ export default function LocationEdit() {
   const fullLocation = myLocationData?.length === 5;
   return (
     <div className="w-full flex flex-col mb-8">
-      <header className="h-12 relative flex items-center self-stretch justify-center mb-8">
-        <img
-          src={ChevronL}
-          alt="뒤로가기"
-          className=" absolute left-0 cursor-pointer"
-          onClick={() => navigate(-1)}
-        />
-        <p className="subtitle-b-18 text-center">위치관리</p>
-      </header>
+      <PageHeader title="위치 관리" />
       <div
         onClick={handleClick}
         onClickCapture={(e) => {

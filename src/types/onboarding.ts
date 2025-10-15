@@ -16,3 +16,9 @@ export type UserSignUpRequestDto = {
   // birthday: string;
   email: string;
 };
+
+//로그인
+export type LoginRequestDto = {
+  loginId: string;
+  password: string;
+};
