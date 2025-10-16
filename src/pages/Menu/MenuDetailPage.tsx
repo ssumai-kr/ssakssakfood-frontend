@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MENUS } from "@/Mock/menudatas";
 import StockBadge from "@/components/StockBadge";
 import StoreInfoCard from "@/components/StoreInfoCard";
@@ -23,20 +23,15 @@ export default function MenuDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [buyQuantity, setBuyQuantity] = useState<number>(1);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const menu = MENUS.find((m) => m.id === Number(id));
   if (!menu) return <p>메뉴를 찾을 수 없습니다.</p>;
 
-  // 쿠키에서 AccessToken 확인 함수
-  const getAccessToken = () => {
-    const cookies = document.cookie.split("; ");
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.startsWith("AccessToken="),
-    );
-    return tokenCookie ? tokenCookie.split("=")[1] : null;
-  };
-
-  // 예약하기 버튼 클릭 핸들러
   const handleReservationClick = () => {
     if (!isSheetOpen) {
       setIsSheetOpen(true);
@@ -44,14 +39,24 @@ export default function MenuDetailPage() {
     }
 
     //토큰 체크 -> 테스트입니다.
-    const accessToken = getAccessToken();
+    // const accessToken = getAccessToken();
 
-    if (!accessToken) {
-      alert("로그인 후 이용해주세요");
-      navigate("/login");
-      return;
-    }
-    console.log("예약 진행");
+    // if (!accessToken) {
+    // alert("로그인 후 이용해주세요");
+    //navigate("/login");
+    // return;
+    // }
+
+    // 예약 페이지로 이동하면서 데이터 전달
+    navigate(`/menu/${id}/reserve`, {
+      state: {
+        quantity: buyQuantity,
+        title: menu.title,
+        salePrice: menu.salePrice,
+        storeName: menu.storeName,
+        pickupTime: menu.pickupTime,
+      },
+    });
   };
 
   const categoryLabel =
@@ -112,7 +117,11 @@ export default function MenuDetailPage() {
             </div>
           </div>
 
-          <StoreInfoCard name={menu.storeName} address={menu.location} />
+          <StoreInfoCard
+            id={menu.storeId}
+            name={menu.storeName}
+            address={menu.location}
+          />
 
           {otherMenus.length > 0 && (
             <div className="mt-[32px] flex flex-col">
@@ -157,6 +166,8 @@ export default function MenuDetailPage() {
           pickupTime={menu.pickupTime}
           salePrice={menu.salePrice}
           stockCount={menu.stockCount}
+          buyQuantity={buyQuantity}
+          setBuyQuantity={setBuyQuantity}
         />
       </div>
     </div>

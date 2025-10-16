@@ -14,15 +14,26 @@ export default function CategoryPage() {
   const [selectedSlug, setSelectedSlug] = useState<CategorySlugType | "all">(
     slug ?? "all",
   );
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const badgeScrollRef = useRef<HTMLDivElement>(null);
+  const menuListRef = useRef<HTMLDivElement>(null);
   const badgeRefs = useRef<Record<string, HTMLButtonElement>>({});
 
-  // 선택된 뱃지가 보이도록 스크롤
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const currentBadge = badgeRefs.current[selectedSlug];
-    if (currentBadge && scrollRef.current) {
+    if (currentBadge && badgeScrollRef.current) {
       currentBadge.scrollIntoView({ behavior: "smooth", inline: "center" });
     }
+  }, [selectedSlug]);
+
+  useEffect(() => {
+    if (menuListRef.current) {
+      menuListRef.current.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
   }, [selectedSlug]);
 
   const filteredMenus =
@@ -32,9 +43,10 @@ export default function CategoryPage() {
 
   return (
     <div className="flex flex-col gap-6 mt-4 mb-20 px-4">
+      {/* 카테고리 뱃지 목록 */}
       <div
-        ref={scrollRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide select-none"
+        ref={badgeScrollRef}
+        className="flex gap-3 overflow-x-auto scrollbar-hide select-none overscroll-x-none"
       >
         <CategoryBadge
           ref={(el) => {
@@ -57,8 +69,10 @@ export default function CategoryPage() {
         ))}
       </div>
 
+      {/* 메뉴 목록 컨테이너 */}
       {filteredMenus.length > 0 ? (
-        <div className="flex flex-col gap-6 mt-4">
+        // ⭐️ Ref 추가: 메뉴 목록 컨테이너에 menuListRef 연결
+        <div ref={menuListRef} className="flex flex-col gap-6 mt-4">
           {filteredMenus.map((menu) => (
             <MenuCard
               key={menu.id}

@@ -1,6 +1,7 @@
 //Header Components
 import locatoinImg from "@/assets/icons/location.svg";
 import chevronDownImg from "@/assets/icons/chevron-down.svg";
+import chevronLeftImg from "@/assets/icons/chevron-left.svg";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
@@ -18,7 +19,7 @@ export function MenuHeader({ title }: HeaderProps) {
     <header>
       <div className='flex items-center justify-center py-4 border-gray-200 bg-white sticky top-0 z-10"'>
         <img
-          src="/icons/chevron-left.svg"
+          src={chevronLeftImg}
           alt="뒤로가기"
           className=" absolute left-0 cursor-pointer"
           onClick={() => navigate(-1)}
