@@ -185,9 +185,8 @@ export default function LocationSearch() {
     setSelectedId((prev) => (prev === id ? null : id));
   };
   return (
-    <div className="w-full flex flex-col ">
+    <div className=" flex flex-col  relative">
       <PageHeader title="위치관리" />
-
       <div className="flex ">
         <button className="cursor-pointer">
           <img src={SearchIcon} alt="검색" className="size-6 mr-3" />
@@ -203,9 +202,11 @@ export default function LocationSearch() {
           }}
         />
       </div>
-      <span className=" h-1 bg-grey-5 mb-4"></span>
+      <span className=" h-1 bg-grey-5 mb-4 -mx-6"></span>
       {/* 현재위치불러오기 */}
-      <SearchLocationBtn className="mb-4" onClick={onClickCurrent} />
+      <div className="flex items-center justify-center">
+        <SearchLocationBtn className="mb-4 " onClick={onClickCurrent} />
+      </div>
       {/* 리스트 */}
       {results.map((item, idx) => {
         const isLast = idx === results.length - 1;
@@ -214,7 +215,7 @@ export default function LocationSearch() {
           <div
             onClick={() => handleSelect(item.id)}
             ref={isLast ? lastResultRef : null}
-            className="scrollbar-hide"
+            className="scrollbar-hide "
             key={item.id}
           >
             <LocationList
@@ -229,15 +230,15 @@ export default function LocationSearch() {
           </div>
         );
       })}
-      <div
-        className=" fixed  w-full max-w-[353px] flex justify-center bottom-0 pb-6  z-50 bg-white "
-        // onClick={() => handleSelectLocation(results[selectedId])}
-      >
-        <Button
-          labelName="위치등록"
-          disabled={selectedId === null}
-          onClick={handleRegister}
-        />
+      <div className="flex items-center justify-center">
+        <div className="fixed max-w-[354px] w-full -mx-6  items-center flex justify-center bottom-0 pb-6   bg-white">
+          <Button
+            labelName="위치 등록하기"
+            disabled={selectedId === null}
+            onClick={handleRegister}
+            // className=" fixed  "
+          />
+        </div>
       </div>
     </div>
   );

@@ -26,7 +26,6 @@ export default function LoginPage() {
       loginId,
       password,
     });
-    navigate("/");
   };
   const loginId = watch("login");
   const password = watch("password");

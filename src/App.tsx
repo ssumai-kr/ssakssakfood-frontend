@@ -19,13 +19,9 @@ function App() {
           - 웹앱 프로젝트 이므로, iphone 16pro 기준 401px로 고정
       */}
       <div className="w-full max-w-[401px] bg-white shadow-2xl">
-        <main className="min-h-[calc(100vh-60px)] ">
-          {isSplashShown ? (
-            <SplashScreen />
-          ) : (
-            <RouterProvider router={router} />
-          )}
-        </main>
+        {/* <main className="min-h-[calc(100vh-60px)] "> */}
+        {isSplashShown ? <SplashScreen /> : <RouterProvider router={router} />}
+        {/* </main> */}
       </div>
     </div>
   );

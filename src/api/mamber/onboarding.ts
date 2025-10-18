@@ -8,6 +8,7 @@ import type {
 import api from "../apiMember";
 import useUserStore from "@/store/useUserStore";
 import { useNavigate } from "react-router-dom";
+import axiosLib from "axios";
 
 export const onBoardingEmail = async (body: EmailSend) => {
   const { data } = await api.post("/email/send", body);
@@ -61,7 +62,13 @@ export const useUserLogin = () => {
       });
       navigate("/");
     },
-    onError: (error) => console.log(error),
+    onError: (err) => {
+      if (axiosLib.isAxiosError(err)) {
+        if (err.response?.data.code === "BAD_REQUEST") {
+          alert(err.response.data.message);
+        }
+      }
+    },
   });
 };
 

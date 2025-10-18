@@ -1,5 +1,6 @@
 import CheckFull from "@assets/icons/check-full.svg";
 import CheckC from "@assets/icons/check-circle.svg";
+import ChevronR from "@/assets/icons/chevron-right.svg";
 
 interface TermTextProps {
   text: string;
@@ -23,7 +24,7 @@ export default function TermText({
         />
         <p className="body-r-16">{text}</p>
       </div>
-      <img src="/icons/chevron-right.svg" alt="" />
+      <img src={ChevronR} alt="" />
     </div>
   );
 }

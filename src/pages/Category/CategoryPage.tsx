@@ -42,7 +42,7 @@ export default function CategoryPage() {
       : MENUS.filter((menu) => menu.slug === selectedSlug);
 
   return (
-    <div className="flex flex-col gap-6 mt-4 mb-20 px-4">
+    <div className="flex flex-col gap-6 mt-4 mb-20">
       {/* 카테고리 뱃지 목록 */}
       <div
         ref={badgeScrollRef}

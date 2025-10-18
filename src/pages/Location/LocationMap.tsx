@@ -73,28 +73,32 @@ export default function LocationMap() {
   };
 
   return (
-    <div className="flex flex-col h-dvh max-w-[401px] overflow-y-hidden relative">
-      <PageHeader title="위치관리" />
-
-      <div ref={mapRef} className="flex-1 relative  max-w-[401px] ">
+    <div className="flex flex-col h-dvh  overflow-y-hidden relative -mx-6">
+      <div className="mx-6">
+        <PageHeader title="위치관리" />
+      </div>
+      <div ref={mapRef} className="flex-1 relative  ">
         <div
-          className="absolute  flex items-center gap-2 top-0 left-1/2 -translate-x-1/2 w-full h-11 pr-3 py-4  bg-white z-50 cursor-pointer "
+          className="absolute  flex items-center gap-2 top-0 left-1/2 -translate-x-1/2 w-full h-11 pr-3 py-4  bg-white z-50 cursor-pointer px-6"
           onClick={() => navigate(-1)}
         >
           <Search />
           <span className="flex-1 text-left">{place}</span>
         </div>
       </div>
-      <div className="absolute bottom-0 w-full max-w-[353px] pt-5 pb-6 flex flex-col items-center gap-5 bg-white z-20 rounded-t-2xl ">
-        <div className="flex flex-col px-2  w-full items-start gap-1 ">
-          <span className="subtitle-b-16">{place}</span>
-          <span className="body-r-14">{address}</span>
+      <div className="flex items-center justify-center">
+        <div className="absolute bottom-0 w-full -mx-6 pt-5 pb-6 flex flex-col items-center gap-5 bg-white z-20 rounded-t-2xl ">
+          <div className="flex flex-col  w-full items-start gap-1 px-6">
+            <span className="subtitle-b-16">{place}</span>
+            <span className="body-r-14 mb-6">{address}</span>
+            <Button
+              labelName="위치 등록하기"
+              disabled={false}
+              onClick={() => handleSelect(payload)}
+              className="flex flex-col  w-full"
+            />
+          </div>
         </div>
-        <Button
-          labelName="위치 등록하기"
-          disabled={false}
-          onClick={() => handleSelect(payload)}
-        />
       </div>
     </div>
   );

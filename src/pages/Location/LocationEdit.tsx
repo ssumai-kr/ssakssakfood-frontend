@@ -54,7 +54,7 @@ export default function LocationEdit() {
   }
   const fullLocation = myLocationData?.length === 5;
   return (
-    <div className="w-full flex flex-col mb-8">
+    <div className=" flex flex-col mb-8">
       <PageHeader title="위치 관리" />
       <div
         onClick={handleClick}
@@ -66,7 +66,7 @@ export default function LocationEdit() {
         }}
       >
         <LocationField mode={fullLocation ? "fill-only" : "call-api"} />
-        <div className=" h-1 bg-grey-5 mb-4"></div>
+        <div className=" h-1 bg-grey-5 mb-4 -mx-6"></div>
         <SearchLocationBtn className="mb-6" />
       </div>
       <section className=" flex flex-col">
