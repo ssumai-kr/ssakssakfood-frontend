@@ -1,16 +1,17 @@
 import { useState } from "react";
 import Button from "../../components/Button";
 import TermText from "../../components/Login/TermText";
-import { useNavigate } from "react-router-dom";
-import ChevronL from "@assets/icons/chevron-left.svg";
+import { useLocation, useNavigate } from "react-router-dom";
 import CheckFull from "@assets/icons/check-full.svg";
 import CheckC from "@assets/icons/check-circle.svg";
+import PageHeader from "@/components/PageHeader";
 
 export default function TermPage() {
   const [serviceAgree, setServiceAgree] = useState<boolean>(false);
   const [privacyAgree, setPrivacyAgree] = useState<boolean>(false);
   const [marketingAgree, setMarketingAgree] = useState<boolean>(false);
 
+  const location = useLocation();
   const allChecked = serviceAgree && privacyAgree && marketingAgree;
 
   const allTermAgree = () => {
@@ -22,14 +23,18 @@ export default function TermPage() {
 
   const navigate = useNavigate();
 
+  const handleNextPage = () => {
+    if (location.state === "owner") {
+      navigate("/onboarding/confirm", { state: "owner" });
+    } else {
+      navigate("/onboarding");
+    }
+  };
   const isFormValid = serviceAgree && privacyAgree;
   return (
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">
-        <header className="h-12 relative flex items-center self-stretch justify-center">
-          <img src={ChevronL} alt="뒤로가기" className=" absolute left-0" />
-          <p className="subtitle-b-18 text-center">서비스 이용 동의</p>
-        </header>
+        <PageHeader title="서비스이용동의" />
         <div className="text-2xl font-bold my-8 ">
           <p>&quot;싹싹푸드&quot; 사용을 위한</p>
           <p>약관 동의가 필요해요</p>
@@ -69,7 +74,7 @@ export default function TermPage() {
         <Button
           labelName="다음"
           disabled={!isFormValid ? true : false}
-          onClick={() => navigate("/onboarding")}
+          onClick={handleNextPage}
           className="w-full"
         />
       </div>

@@ -3,6 +3,7 @@ import type {
   EmailRequestDTO,
   EmailSend,
   LoginRequestDto,
+  OwnerSignupDto,
   UserSignUpRequestDto,
 } from "../../types/onboarding";
 import api from "../apiMember";
@@ -88,4 +89,41 @@ export const useUploadImg = (memberId: number) => {
     },
     onError: (err) => console.log(err),
   });
+};
+
+//owner 회원가입
+export const postOwnerSignup = async (body: OwnerSignupDto) => {
+  const { data } = await api.post("/owners/signup", body);
+  return data;
+};
+
+export const useSignup = () => {
+  return useMutation({
+    mutationFn: (body: OwnerSignupDto) => postOwnerSignup(body),
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err) => console.log(err),
+  });
+};
+
+//사장 프로필 이미지 업로드
+
+export const ownerImg = async ({
+  memberId,
+  body,
+}: {
+  memberId: number;
+  body: FormData;
+}) => {
+  const { data } = await api.post(`/images/profile/${memberId}`, body, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+};
+
+export const useOwnerImg = () => {
+  return useMutation((vars: { memberId: number; body: FormData }) =>
+    ownerImg(vars),
+  );
 };

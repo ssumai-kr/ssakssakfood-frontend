@@ -8,6 +8,7 @@ import axios from "axios";
 import { postLocation } from "../../api/location/location";
 import SearchIcon from "@/assets/icons/search.svg?url";
 import PageHeader from "@/components/PageHeader";
+import { useOnboardingState } from "@/store/useOnboardingStore";
 
 export interface Place {
   place_name: string;
@@ -36,7 +37,10 @@ export default function LocationSearch() {
   //무한스크롤 옵저버
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const mode = location.state?.mode ?? "fill-only";
+  const isOwner =
+    location.state === "owner" || location.state?.owner === "owner";
+  // const mode = location.state?.mode ?? "fill-only";
+  const mode = location.state?.mode ?? (isOwner ? "fill-only" : "call-api");
 
   const isFetchingRef = useRef(false);
   const fetchPlaces = useCallback(
@@ -141,7 +145,11 @@ export default function LocationSearch() {
         navigate(
           `/location/map?x=${longitude}&y=${latitude}&place=${encodeURIComponent(place)}&address=${encodeURIComponent(address)}&query=${encodeURIComponent(input ?? "")}`,
           {
-            state: { mode: "call-api" },
+            state: {
+              mode: isOwner ? "fill-only" : "call-api",
+              owner: isOwner ? "owner" : undefined,
+              returnPath: "/location/search",
+            },
           },
         );
       } catch (err) {
@@ -150,10 +158,24 @@ export default function LocationSearch() {
       }
     });
   };
-
+  console.log(location.state);
+  const { setTemp } = useOnboardingState();
   const handleRegister = async () => {
     if (selectedId === null) return;
+
     const p = results.find((item) => item.id === selectedId);
+    if (isOwner) {
+      setTemp({
+        location: {
+          ...location,
+          roadAddress: p?.address_name,
+          latitude: Number(p?.y),
+          longitude: Number(p?.x),
+        },
+      });
+      navigate("/onboarding/store");
+      return;
+    }
     console.log(p);
     const payload = {
       kakaoPlaceId: p?.id.toString() ?? "",
@@ -210,7 +232,7 @@ export default function LocationSearch() {
       {/* 리스트 */}
       {results.map((item, idx) => {
         const isLast = idx === results.length - 1;
-        console.log(item);
+        // console.log(item);
         return (
           <div
             onClick={() => handleSelect(item.id)}
@@ -226,12 +248,13 @@ export default function LocationSearch() {
               y={Number(item.y)}
               place={item.place_name ?? ""}
               address={item.address_name ?? ""}
+              owner={isOwner}
             />
           </div>
         );
       })}
       <div className="flex items-center justify-center">
-        <div className="fixed max-w-[354px] w-full -mx-6  items-center flex justify-center bottom-0 pb-6   bg-white">
+        <div className="fixed max-w-[354px] w-full -mx-6  items-center flex justify-center bottom-0 pb-8   bg-white">
           <Button
             labelName="위치 등록하기"
             disabled={selectedId === null}

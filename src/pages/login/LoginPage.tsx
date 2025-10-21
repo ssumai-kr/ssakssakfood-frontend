@@ -3,24 +3,33 @@ import InputField from "../../components/InputField";
 import LogoImg from "@assets/images/logo.png";
 import Login from "@assets/images/login.png";
 import managerLogin from "@assets/images/manager-login.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserLogin } from "@/api/mamber/onboarding";
 import { useForm } from "react-hook-form";
 export default function LoginPage() {
   const [manager, setManager] = useState<boolean>(false);
   const [pwChecked, setpwChecked] = useState<boolean>(false);
-  const revertManager = () => {
-    setManager(true);
-  };
+
   const navigate = useNavigate();
   const userLoginForm = useUserLogin();
-  const { register, watch } = useForm({
+
+  const revertManager = () => setManager(true);
+
+  const { register, watch, reset } = useForm({
     defaultValues: {
-      login: "qwer1234",
-      password: "qwer1234Q@",
+      login: "minsol",
+      password: "qwer1234@Q",
     },
   });
+  useEffect(() => {
+    reset(
+      manager
+        ? { login: "minsol", password: "qwer1234@Q" } // 사장님 프리셋
+        : { login: "qwer1234", password: "qwer1234Q@" }, // 고객 프리셋
+    );
+  }, [manager, reset]);
+
   const handleLogin = () => {
     userLoginForm.mutate({
       loginId,
@@ -29,6 +38,14 @@ export default function LoginPage() {
   };
   const loginId = watch("login");
   const password = watch("password");
+
+  const handleSignup = () => {
+    if (manager) {
+      navigate("/term", { state: "owner" });
+    } else {
+      navigate("/term");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-dvh -mx-6 bg-main1 relative">
@@ -66,10 +83,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-center body-r-14 text-grey-2 mb-5">
             <p className="pr-1">이메일 찾기 |</p>
             <p className="pr-1"> 비밀번호 찾기 |</p>
-            <p
-              className="pr-1 cursor-pointer"
-              onClick={() => navigate("/term")}
-            >
+            <p className="pr-1 cursor-pointer" onClick={handleSignup}>
               회원가입
             </p>
           </div>

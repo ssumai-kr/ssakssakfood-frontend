@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { ProgressBar } from "../../components/ProgressBar";
 import Button from "../../components/Button";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import Camera from "@assets/icons/camera.svg";
 import { useUploadImg } from "@/api/mamber/onboarding";
+import ImagePickerBox from "@/components/ImagePickerBox";
 
 export default function OnBoardingCardPage() {
   const navigate = useNavigate();
@@ -15,18 +15,9 @@ export default function OnBoardingCardPage() {
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const fileInput = useRef(null);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreview(String(reader.result));
-      };
-      reader.readAsDataURL(file);
-    }
+  const handlePick = (f: File | null, url: string) => {
+    setFile(f);
+    setPreview(url);
   };
 
   const handleNext = () => {
@@ -58,35 +49,13 @@ export default function OnBoardingCardPage() {
             <p>무료로 구매할 수 있어요</p>
           </div>
         </div>
-        <div className="relative ">
-          <label
-            htmlFor="image-upload"
-            className="block h-[240px] rounded-xl border-2 border-dashed border-grey-3 
-               cursor-pointer "
-          >
-            {preview ? (
-              <img
-                src={preview}
-                alt="업로드 미리보기"
-                className="w-full h-[240px] object-certain rounded-xl"
-              />
-            ) : (
-              <div className="h-[240px] flex flex-col items-center justify-center gap-2">
-                <img src={Camera} alt="사진 업로드" />
-                <span className="body-r-14 text-grey-3">사진 첨부하기</span>
-              </div>
-            )}
-          </label>
 
-          <input
-            type="file"
-            id="image-upload"
-            className="hidden"
-            accept="image/*"
-            onChange={handleImageChange}
-            ref={fileInput}
-          ></input>
-        </div>
+        <ImagePickerBox
+          file={file}
+          previewUrl={preview}
+          onChange={handlePick}
+          boxClass="w-full h-[240px]"
+        />
       </section>
 
       <Button

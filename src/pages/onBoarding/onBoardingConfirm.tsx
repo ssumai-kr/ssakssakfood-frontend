@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../../components/Button";
 import InputField2 from "../../components/InputField2";
 import { ProgressBar } from "../../components/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 
 import type { EmailRequestDTO, EmailSend } from "../../types/onboarding";
@@ -16,6 +16,7 @@ import Modal from "@/components/onBoarding/Modal";
 
 export default function OnBoardingConfirmPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [emailValue, setEmailValue] = useState<string>("");
   const [codeValue, setCodeValue] = useState<string>("");
@@ -51,7 +52,12 @@ export default function OnBoardingConfirmPage() {
     mutationFn: (body: EmailRequestDTO) => onBoardingEmailCode(body),
     onSuccess: () => {
       console.log("성공");
-      navigate("/onBoarding/number");
+      console.log(location.state);
+      if (location.state === "owner") {
+        navigate("/onboarding/pass", { state: "owner" });
+      } else {
+        navigate("/onBoarding/number");
+      }
     },
     onError: (err) => console.log(err),
   });
@@ -76,7 +82,11 @@ export default function OnBoardingConfirmPage() {
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">
         <PageHeader title={"회원가입"} />
-        <ProgressBar step={2} className="my-8" />
+        <ProgressBar
+          step={location.state === "owner" ? 1 : 2}
+          className="my-8"
+          owner={true}
+        />
         <section className="flex flex-col gap-6">
           <div>
             <p className="text-2xl font-bold mb-2">이메일을 입력해주세요</p>

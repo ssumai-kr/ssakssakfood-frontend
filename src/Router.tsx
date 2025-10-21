@@ -20,6 +20,8 @@ import OnBoardingCardPage from "@/pages/onBoarding/onBoardingCard";
 import OnBoardingComplete from "@/pages/onBoarding/onBoardingComplete";
 import StorePage from "./pages/Store/StorePage";
 import ReservePage from "./pages/Reserve/ReservePage";
+import OwnerInformation from "@/pages/onBoarding/onBoardingOwner";
+import StoreInformation from "@/pages/onBoarding/onBoardingStore";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,8 @@ const router = createBrowserRouter([
       { path: "/onBoarding/card", element: <OnBoardingCardPage /> },
       { path: "/onBoarding/card", element: <OnBoardingCardPage /> },
       { path: "/onBoarding/complete", element: <OnBoardingComplete /> },
+      { path: "/onBoarding/owner", element: <OwnerInformation /> },
+      { path: "/onBoarding/store", element: <StoreInformation /> },
       //위치수정
       { path: "/location/edit", element: <LocationEdit /> },
       { path: "/location/search", element: <LocationSearch /> },

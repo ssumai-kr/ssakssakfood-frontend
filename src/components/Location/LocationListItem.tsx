@@ -12,6 +12,7 @@ interface LocationListProps {
   address: string;
   // road: string;
   input?: string;
+  owner?: boolean;
   // mode?: "fill-only" | "call-api";
 }
 export default function LocationList({
@@ -23,9 +24,10 @@ export default function LocationList({
   x,
   y,
   input,
+  owner,
 }: LocationListProps) {
   const navigate = useNavigate();
-
+  console.log(owner, "지도에서보기");
   const handleViewOnMapClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -34,7 +36,9 @@ export default function LocationList({
       `/location/map?x=${x}&y=${y}&place=${encodeURIComponent(place)}&address=${encodeURIComponent(address)}&query=${encodeURIComponent(input ?? "")}`,
       {
         state: {
-          mode: "call-api",
+          owner: owner ? "owner" : undefined,
+          mode: owner ? "fill-only" : "call-api",
+          returnPath: "/location/search",
         },
       },
     );
