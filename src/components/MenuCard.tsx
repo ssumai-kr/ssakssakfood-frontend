@@ -1,9 +1,9 @@
 import mockImg from "@/assets/icons/bread.svg";
 import StockBadge from "./StockBadge";
 import { useNavigate } from "react-router-dom";
-
+import closeImg from "@/assets/icons/x-circle.svg";
 interface MenuCardProps {
-  id: number; // ✅ 메뉴 ID 추가
+  id: number;
   title: string;
   storeName: string;
   pickupTime: string;
@@ -13,6 +13,7 @@ interface MenuCardProps {
   stockCount: number;
 }
 
+//일반 홈 화면에서 보이는 메뉴 카드 컴포넌트입니다.
 export default function MenuCard({
   id,
   title,
@@ -68,6 +69,158 @@ export default function MenuCard({
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+//사장님 홈 화면에서 보이는 메뉴 이미지 카드 컴포넌트입니다.
+export function MenuImgCard({
+  originalPrice,
+  salePrice,
+  name,
+}: {
+  originalPrice: number;
+  salePrice: number;
+  name: string;
+}) {
+  return (
+    <div className="relative w-[128px] h-[128px] flex-shrink-0">
+      <img
+        src={mockImg}
+        alt="임시"
+        className="w-full h-full object-cover rounded-[8px]"
+      />
+      <div
+        className="absolute inset-0 rounded-[8px] z-10 
+                   bg-gradient-to-t from-black/60 via-black/0 to-transparent"
+      ></div>
+      <div className="absolute left-[10px] bottom-[30px] text-[16px] text-white font-bold z-20">
+        {name}
+      </div>
+      <div className="flex items-center  gap-2 absolute left-[10px] bottom-[12px] text-white z-20">
+        <div className="line-through text-[12px]">
+          {originalPrice.toLocaleString()}원
+        </div>
+        <div className="font-bold text-[14px]">
+          {salePrice.toLocaleString()}원
+        </div>
+      </div>
+      <div className="absolute top-[8px] left-[8px]"></div>
+    </div>
+  );
+}
+
+export function MenuAddCard({
+  name,
+  originalPrice,
+  salePrice,
+  isEditMode,
+  onDelete,
+}: {
+  name: string;
+  originalPrice: number;
+  salePrice: number;
+  isEditMode?: boolean;
+  onDelete?: () => void;
+}) {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="flex gap-4 items-center">
+        <img src={mockImg} alt="식품 추가 아이콘" width={80} />
+        <div className="flex flex-col gap-2">
+          <div className="text-[18px] font-bold">{name}</div>
+          <div className="flex flex-col text-[14px] font-normal text-[#7F7F7F]">
+            <div>
+              원가{" "}
+              <span className="font-semibold">
+                {originalPrice.toLocaleString()}원
+              </span>
+            </div>
+            <div>
+              판매가{" "}
+              <span className="font-semibold">
+                {salePrice.toLocaleString()}원
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {isEditMode ? (
+        <div
+          className="w-[30px] h-[30px] flex items-center justify-center rounded-full cursor-pointer"
+          onClick={onDelete}
+        >
+          <img src={closeImg} alt="삭제" />
+        </div>
+      ) : (
+        <div className="w-[74px] h-[30px] text-white text-[14px] font-semibold flex rounded-lg items-center justify-center bg-main1 px-[11px] py-[7px] cursor-pointer">
+          판매 시작
+        </div>
+      )}
+    </div>
+  );
+}
+
+//(사장님) 오늘의 판매 식품 리스트에 보이는 메뉴 카드 컴포넌트입니다.
+export function MenuTodayCard({
+  name,
+  originalPrice,
+  salePrice,
+  dueDate,
+  stockCount,
+  isShare,
+  isSoldOut,
+}: {
+  name: string;
+  originalPrice: number;
+  salePrice: number;
+  dueDate: string;
+  stockCount: number;
+  isShare?: boolean;
+  isSoldOut?: boolean;
+}) {
+  return (
+    <div className="flex gap-[12px] items-center">
+      {/* 이미지 영역 */}
+      <div className="relative w-[114px] h-[114px] flex-shrink-0">
+        <img src={mockImg} alt="임시" className="w-full h-full rounded-[8px]" />
+        {isSoldOut && (
+          <div className="absolute inset-0 bg-black opacity-50 rounded-[8px]" />
+        )}
+        <div className="absolute top-[8px] left-[8px]">
+          <StockBadge count={stockCount} isSoldOut={isSoldOut} />
+        </div>
+      </div>
+
+      {/* 정보 영역 */}
+      <div className="flex flex-col justify-between flex-1 min-w-0">
+        {/* 상단: 이름과 마감기한 */}
+        <div className="flex flex-col gap-[2px]">
+          <span className="text-[18px] font-bold truncate">{name}</span>
+          <div className="text-[14px] text-[#7F7F7F]">
+            마감기한 <span>{dueDate}</span>
+          </div>
+        </div>
+
+        {/* 중간: 급식카드 배지 */}
+        {isShare ? (
+          <div className="text-[14px] font-semibold text-[#496FF8] bg-[#EDF1FF] w-fit px-0.5 mt-[2px]">
+            급식카드 소지자 무료 식품
+          </div>
+        ) : (
+          <div className="h-[21px]" />
+        )}
+
+        {/* 하단: 가격 */}
+        <div className="flex flex-col items-end">
+          <span className="text-[14px] font-semibold text-[#7F7F7F] line-through">
+            {originalPrice.toLocaleString()}원
+          </span>
+          <span className="text-[18px] font-bold">
+            {salePrice.toLocaleString()}원
+          </span>
         </div>
       </div>
     </div>

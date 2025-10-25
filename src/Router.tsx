@@ -22,6 +22,8 @@ import StorePage from "./pages/Store/StorePage";
 import ReservePage from "./pages/Reserve/ReservePage";
 import OwnerInformation from "@/pages/onBoarding/onBoardingOwner";
 import StoreInformation from "@/pages/onBoarding/onBoardingStore";
+import ManagerHome from "./pages/ManagerHome/ManagerHome";
+import AllfoodsPage from "./pages/ManagerHome/AllFoodsPage";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,9 @@ const router = createBrowserRouter([
       { path: "/store/:id", element: <StorePage /> },
       //예약
       { path: "/menu/:id/reserve", element: <ReservePage /> },
+      //임시 사장님 홈 화면 -> ROLE 기반 라우팅 후 변경 예정
+      { path: "/manager-home", element: <ManagerHome /> },
+      { path: "/allfoods", element: <AllfoodsPage /> },
     ],
   },
   //메뉴 상세 페이지

@@ -20,11 +20,11 @@ export default function Layout() {
         <SearchInput className="bg-[#F3F3F3] px-[16px] py-[10px] rounded-3xl mx-6" />
       </div>
 
-      <main className="px-6">
+      <main className="px-6 w-full">
         <Outlet />
       </main>
 
-      <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[401px] bg-white border-t border-gray-100 z-10">
+      <footer className="fixed bottom-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto">
         <FooterNav />
       </footer>
     </>
