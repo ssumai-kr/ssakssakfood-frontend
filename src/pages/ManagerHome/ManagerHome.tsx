@@ -5,10 +5,38 @@ import { MenuAddCard, MenuImgCard } from "@/components/MenuCard";
 import addImg from "@/assets/icons/plus-orange.svg";
 import OwnerFooterNav from "@/layout/OwnerFooterNav";
 import { useNavigate } from "react-router-dom";
+import { ADDEDMENUS } from "@/Mock/ownerdatas";
+import StartSaleBottomSheet from "./UI/StartSaleBottomSheet";
+import Modal from "@/components/onBoarding/Modal";
 
 export default function ManagerHome() {
   const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [modal, setModal] = useState(false);
+
+  const handleStartSale = (menuId: number) => {
+    setSelectedMenuId(menuId);
+    setIsSheetOpen(true);
+    console.log(selectedMenuId); //test
+  };
+
+  const handleConfirmSale = () => {
+    // 바텀시트 먼저 닫기
+    setIsSheetOpen(false);
+    // 약간의 딜레이 후 모달 열기
+    setTimeout(() => {
+      setModal(true);
+    }, 300);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+    setSelectedMenuId(null);
+    setQuantity(1);
+  };
 
   return (
     <>
@@ -53,7 +81,7 @@ export default function ManagerHome() {
       <section className="mt-[24px] mb-[100px]">
         <div className="flex justify-between items-center">
           <h2 className="flex gap-2 text-[20px] font-bold">
-            내 식품 <span className="text-red">5</span>
+            내 식품 <span className="text-red">{ADDEDMENUS.length}</span>
           </h2>
           {isEditMode ? (
             <div className="flex gap-2">
@@ -80,47 +108,57 @@ export default function ManagerHome() {
           )}
         </div>
         {!isEditMode && (
-          <div className="text-[16px] font-semibold text-[#FE7549] flex gap-2 justify-center items-center border-1 border-dashed border-[#FE7549] rounded-lg h-[48px] mt-[24px] cursor-pointer mb-[16px]">
+          <div
+            className="text-[16px] font-semibold text-[#FE7549] flex gap-2 justify-center items-center border-1 border-dashed border-[#FE7549] rounded-lg h-[48px] mt-[24px] cursor-pointer mb-[16px]"
+            onClick={() => navigate("/addfood")}
+          >
             <img src={addImg} alt="식품 추가 아이콘" />
             식품 추가하기
           </div>
         )}
         <div className={`flex flex-col gap-4 ${isEditMode ? "mt-[24px]" : ""}`}>
-          <MenuAddCard
-            name="식품명"
-            originalPrice={10000}
-            salePrice={8000}
-            isEditMode={isEditMode}
-          />
-          <MenuAddCard
-            name="식품명"
-            originalPrice={10000}
-            salePrice={8000}
-            isEditMode={isEditMode}
-          />
-          <MenuAddCard
-            name="식품명"
-            originalPrice={10000}
-            salePrice={8000}
-            isEditMode={isEditMode}
-          />
-          <MenuAddCard
-            name="식품명"
-            originalPrice={10000}
-            salePrice={8000}
-            isEditMode={isEditMode}
-          />
-          <MenuAddCard
-            name="식품명"
-            originalPrice={10000}
-            salePrice={8000}
-            isEditMode={isEditMode}
-          />
+          {ADDEDMENUS.map((menu) => (
+            <MenuAddCard
+              key={menu.id}
+              id={menu.id}
+              name={menu.name}
+              originalPrice={menu.originalPrice}
+              salePrice={menu.discountPrice}
+              isEditMode={isEditMode}
+              onStartSale={handleStartSale}
+            />
+          ))}
         </div>
       </section>
       <footer className="fixed bottom-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto ml-[-24px]">
         <OwnerFooterNav />
       </footer>
+
+      <StartSaleBottomSheet
+        isOpen={isSheetOpen}
+        onClose={() => setIsSheetOpen(false)}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        onConfirm={handleConfirmSale}
+      />
+
+      {/* 모달 */}
+      {modal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={closeModal}
+          ></div>
+          <div className="relative z-[101] w-full">
+            <Modal
+              closeModal={closeModal}
+              title="식품이 판매 시작되었어요!"
+              subTitle="판매되고 있는 식품은 오늘의 판매 식품에서
+          확인하실 수 있어요"
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

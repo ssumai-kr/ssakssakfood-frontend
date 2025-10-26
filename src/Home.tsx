@@ -4,6 +4,7 @@ import { CATEGORY } from "./constants/Category";
 import MenuCard from "./components/MenuCard";
 import Carousel from "./components/Carousel";
 import { useNavigate } from "react-router-dom";
+import FooterNav from "./layout/FooterNav";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -53,6 +54,9 @@ const Home: React.FC = () => {
           ))}
         </div>
       </div>
+      <footer className="fixed bottom-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto ml-[-24px]">
+        <FooterNav />
+      </footer>
     </div>
   );
 };

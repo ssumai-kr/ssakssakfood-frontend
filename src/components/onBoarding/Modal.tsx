@@ -22,7 +22,9 @@ export default function Modal({ closeModal, title, subTitle }: ModalProps) {
             onClick={closeModal}
           />
 
-          <p className="body-r-14 text-grey-2">{subTitle}</p>
+          <p className="body-r-14 text-grey-2 flex items-center justify-center max-w-[240px] text-center">
+            {subTitle}
+          </p>
         </div>
       </div>
     </>

@@ -14,6 +14,8 @@ interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   // imgSrc?: string;
   type?: string;
   showPwd?: boolean;
+  inputClassName?: string;
+  inputText?: string;
 }
 
 export default function InputField2({
@@ -26,6 +28,8 @@ export default function InputField2({
   // imgSrc = "",
   showPwd,
   onClick,
+  inputClassName,
+  inputText,
   ...props
 }: InputFieldProps) {
   return (
@@ -34,7 +38,7 @@ export default function InputField2({
       <input
         type={type}
         className={`w-full px-4 flex body-r-14 items-center py-4 border-1 rounded-xl  focus:border-main1
-          bg-grey-5 border-grey-5 focus:outline-none`}
+          bg-grey-5 border-grey-5 focus:outline-none ${inputClassName}`}
         {...(register ?? {})}
         {...props}
         placeholder={placeholder}
@@ -45,6 +49,9 @@ export default function InputField2({
           <img src={showPwd ? OpenEye : CloseEye} alt="" onClick={onClick} />
         </div>
       )}
+      <div className="absolute right-4 top-2.5 text-[16px] font-semibold">
+        {inputText}
+      </div>
     </div>
     // </div>
   );

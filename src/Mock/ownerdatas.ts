@@ -135,3 +135,55 @@ export const ALLMENUS = [
     isSoldOut: true,
   },
 ];
+
+export const ADDEDMENUS = [
+  {
+    id: 101,
+    name: "식빵",
+    categoryName: "빵/디저트",
+    originalPrice: 9000,
+    discountPrice: 7000,
+  },
+  {
+    id: 102,
+    name: "바게트",
+    categoryName: "빵/디저트",
+    originalPrice: 3000,
+    discountPrice: 2000,
+  },
+  {
+    id: 103,
+    name: "크루와상",
+    categoryName: "빵/디저트",
+    originalPrice: 4000,
+    discountPrice: 2000,
+  },
+  {
+    id: 104,
+    name: "크림빵",
+    categoryName: "빵/디저트",
+    originalPrice: 2500,
+    discountPrice: 1800,
+  },
+  {
+    id: 105,
+    name: "크림빵",
+    categoryName: "빵/디저트",
+    originalPrice: 2500,
+    discountPrice: 1800,
+  },
+  {
+    id: 106,
+    name: "크림빵",
+    categoryName: "빵/디저트",
+    originalPrice: 2500,
+    discountPrice: 1800,
+  },
+  {
+    id: 107,
+    name: "크림빵",
+    categoryName: "빵/디저트",
+    originalPrice: 2500,
+    discountPrice: 1800,
+  },
+];

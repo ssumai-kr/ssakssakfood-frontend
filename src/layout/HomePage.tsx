@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { LocationHeader } from "../components/Headers";
-import FooterNav from "./FooterNav";
 import SearchInput from "@/components/SearchInput";
 import useGeolocation from "@/hooks/useGeolocation";
 
@@ -23,10 +22,6 @@ export default function Layout() {
       <main className="px-6 w-full">
         <Outlet />
       </main>
-
-      <footer className="fixed bottom-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto">
-        <FooterNav />
-      </footer>
     </>
   );
 }
