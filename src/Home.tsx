@@ -1,5 +1,6 @@
+// Home.tsx
 import React, { useMemo } from "react";
-import { MENUS } from "@/Mock/menudatas"; // 최대 할인율로 가져올 메뉴 더미 데이터
+import { MENUS } from "@/Mock/menudatas";
 import { CATEGORY } from "./constants/Category";
 import MenuCard from "./components/MenuCard";
 import Carousel from "./components/Carousel";
@@ -8,7 +9,7 @@ import FooterNav from "./layout/FooterNav";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  // 할인율 높은 메뉴 상위 6개
+
   const topDiscountMenus = useMemo(() => {
     return [...MENUS]
       .sort((a, b) => b.discountRate - a.discountRate)
@@ -16,9 +17,12 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <div className="mx-[-24px]">
-        <Carousel />
+    <div className="relative">
+      {/* Carousel - 부모의 padding을 무시하고 전체 너비 사용 */}
+      <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw]">
+        <div className="max-w-[401px] mx-auto">
+          <Carousel />
+        </div>
       </div>
 
       <div className="grid grid-cols-4 gap-x-[16px] gap-y-[16px] mt-[16px]">
@@ -54,7 +58,8 @@ const Home: React.FC = () => {
           ))}
         </div>
       </div>
-      <footer className="fixed bottom-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto ml-[-24px]">
+
+      <footer className="fixed bottom-0 left-0 right-0 w-full max-w-[401px] bg-white border-t border-gray-100 z-10 mx-auto">
         <FooterNav />
       </footer>
     </div>
