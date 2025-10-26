@@ -19,7 +19,7 @@ export default function Layout() {
         <SearchInput className="bg-[#F3F3F3] px-[16px] py-[10px] rounded-3xl mx-6" />
       </div>
 
-      <main className="px-6 w-full">
+      <main className="px-6">
         <Outlet />
       </main>
     </>
