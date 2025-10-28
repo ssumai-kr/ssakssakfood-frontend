@@ -1,3 +1,12 @@
+import categoryBread from "@/assets/icons/category-bread.svg";
+import categoryPackmeal from "@/assets/icons/category-packmeal.svg";
+import categoryIngredients from "@/assets/icons/category-ingredients.svg";
+import categoryRestaurant from "@/assets/icons/category-resaurant.svg";
+import categoryMarket from "@/assets/icons/category-market.svg";
+import categoryConvenience from "@/assets/icons/category-convenience.svg";
+import categoryShare from "@/assets/icons/category-share.svg";
+import categorySsakssakstore from "@/assets/icons/category-ssakssakstore.svg";
+
 export type CategorySlugType =
   | "breads"
   | "packedmeal"
@@ -28,41 +37,41 @@ export const CATEGORY: CategoryItem[] = [
   {
     label: "빵/디저트",
     slug: "breads",
-    icon: "/src/assets/icons/category-bread.svg",
+    icon: categoryBread,
   },
   {
     label: "도시락/반찬",
     slug: "packedmeal",
-    icon: "/src/assets/icons/category-packmeal.svg",
+    icon: categoryPackmeal,
   },
   {
     label: "식자재",
     slug: "ingredients",
-    icon: "/src/assets/icons/category-ingredients.svg",
+    icon: categoryIngredients,
   },
   {
     label: "식당/조리",
     slug: "restaurant",
-    icon: "/src/assets/icons/category-resaurant.svg",
+    icon: categoryRestaurant,
   },
   {
     label: "시장",
     slug: "market",
-    icon: "/src/assets/icons/category-market.svg",
+    icon: categoryMarket,
   },
   {
     label: "편의점",
     slug: "convenience",
-    icon: "/src/assets/icons/category-convenience.svg",
+    icon: categoryConvenience,
   },
   {
     label: "나눔",
     slug: "sharing",
-    icon: "/src/assets/icons/category-share.svg",
+    icon: categoryShare,
   },
   {
     label: "착한가게",
     slug: "ssakssakstore",
-    icon: "/src/assets/icons/category-ssakssakstore.svg",
+    icon: categorySsakssakstore,
   },
 ];
