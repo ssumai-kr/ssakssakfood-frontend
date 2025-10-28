@@ -1,23 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { MENUS } from "@/Mock/menudatas";
 import StockBadge from "@/components/StockBadge";
 import StoreInfoCard from "@/components/StoreInfoCard";
 import MenuCard from "@/components/MenuCard";
 import Button from "@/components/Button";
 import chevronLeft from "@/assets/icons/floating-checvron-left.svg";
 import OrderBottomSheet from "./UI/OrderBottomSheet";
-
-const CATEGORY_LABEL_MAP = {
-  breads: "빵/디저트",
-  packedmeal: "도시락/반찬",
-  ingredients: "식자재",
-  restaurant: "식당/조리",
-  market: "시장",
-  convenience: "편의점",
-  sharing: "나눔",
-  ssakssakstore: "착한가게",
-} as const;
+import { useGetMenuDetail } from "@/api/menu/menu";
+import { formatDeadline } from "@/utils/dateFormatter";
 
 export default function MenuDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -25,12 +15,33 @@ export default function MenuDetailPage() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [buyQuantity, setBuyQuantity] = useState<number>(1);
 
+  // API를 통해 메뉴 상세 정보 조회
+  const { data: menuDetail, isLoading } = useGetMenuDetail(Number(id));
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const menu = MENUS.find((m) => m.id === Number(id));
-  if (!menu) return <p>메뉴를 찾을 수 없습니다.</p>;
+  // 로딩 중일 때
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>로딩 중...</p>
+      </div>
+    );
+  }
+
+  // 메뉴를 찾을 수 없을 때
+  if (!menuDetail) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>메뉴를 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  const menu = menuDetail;
+  const store = menuDetail.store;
 
   const handleReservationClick = () => {
     if (!isSheetOpen) {
@@ -51,20 +62,19 @@ export default function MenuDetailPage() {
     navigate(`/menu/${id}/reserve`, {
       state: {
         quantity: buyQuantity,
-        title: menu.title,
-        salePrice: menu.salePrice,
-        storeName: menu.storeName,
-        pickupTime: menu.pickupTime,
+        title: menu.name,
+        salePrice: menu.discountPrice,
+        storeName: store.name,
+        pickupTime: menu.deadline,
       },
     });
   };
 
-  const categoryLabel =
-    CATEGORY_LABEL_MAP[menu.slug as keyof typeof CATEGORY_LABEL_MAP];
+  // 카테고리 레이블 (API에서 category는 문자열로 직접 전달됨)
+  const categoryLabel = menu.category;
 
-  const otherMenus = MENUS.filter(
-    (m) => m.storeName === menu.storeName && m.id !== menu.id,
-  );
+  // 가게의 다른 메뉴들 (API에서 otherMenus로 제공됨)
+  const otherMenus = menu.otherMenus || [];
 
   return (
     <div className="relative w-full max-w-[401px] mx-auto">
@@ -86,8 +96,8 @@ export default function MenuDetailPage() {
 
         <div className="px-6 pb-[100px]">
           <div className="flex justify-between items-center mt-[24px]">
-            <span className="text-[24px] font-bold">{menu.title}</span>
-            <StockBadge count={menu.stockCount} />
+            <span className="text-[24px] font-bold">{menu.name}</span>
+            <StockBadge count={menu.surplusQuantity} />
           </div>
 
           <div className="flex justify-between items-center mt-[16px] my-[24px]">
@@ -98,7 +108,9 @@ export default function MenuDetailPage() {
               </p>
               <p>
                 픽업 가능시간{" "}
-                <span className="font-[400] ml-[8px]">{menu.pickupTime}</span>
+                <span className="font-[400] ml-[8px]">
+                  {formatDeadline(menu.deadline)}
+                </span>
               </p>
             </div>
 
@@ -111,16 +123,16 @@ export default function MenuDetailPage() {
                   <span>{menu.discountRate}</span>%
                 </div>
                 <div className="text-[20px] font-bold">
-                  <span>{menu.salePrice.toLocaleString()}</span>원
+                  <span>{menu.discountPrice.toLocaleString()}</span>원
                 </div>
               </div>
             </div>
           </div>
 
           <StoreInfoCard
-            id={menu.storeId}
-            name={menu.storeName}
-            address={menu.location}
+            id={store.id}
+            name={store.name}
+            address={store.roadAddress}
           />
 
           {otherMenus.length > 0 && (
@@ -133,13 +145,13 @@ export default function MenuDetailPage() {
                   <MenuCard
                     key={item.id}
                     id={item.id}
-                    title={item.title}
+                    title={item.name}
                     storeName={item.storeName}
-                    pickupTime={item.pickupTime}
+                    pickupTime={item.deadline}
                     originalPrice={item.originalPrice}
-                    salePrice={item.salePrice}
+                    salePrice={item.discountPrice}
                     discountRate={item.discountRate}
-                    stockCount={item.stockCount}
+                    stockCount={item.surplusQuantity}
                   />
                 ))}
               </div>
@@ -151,7 +163,7 @@ export default function MenuDetailPage() {
             <Button
               className="w-full text-lg py-6 cursor-pointer"
               labelName="예약하기"
-              disabled={menu.stockCount === 0}
+              disabled={menu.surplusQuantity === 0}
               onClick={handleReservationClick}
             />
           </div>
@@ -161,11 +173,11 @@ export default function MenuDetailPage() {
         <OrderBottomSheet
           isOpen={isSheetOpen}
           onClose={() => setIsSheetOpen(false)}
-          title={menu.title}
-          storeName={menu.storeName}
-          pickupTime={menu.pickupTime}
-          salePrice={menu.salePrice}
-          stockCount={menu.stockCount}
+          title={menu.name}
+          storeName={store.name}
+          pickupTime={menu.deadline}
+          salePrice={menu.discountPrice}
+          stockCount={menu.surplusQuantity}
           buyQuantity={buyQuantity}
           setBuyQuantity={setBuyQuantity}
         />

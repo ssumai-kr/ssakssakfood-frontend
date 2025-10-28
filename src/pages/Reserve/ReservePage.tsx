@@ -4,6 +4,7 @@ import { MenuHeader } from "@/components/Headers";
 import chevronDownImg from "@/assets/icons/chevron-down.svg";
 import Button from "@/components/Button";
 import DialPicker from "@/components/DialPicker";
+import { formatDeadline } from "@/utils/dateFormatter";
 
 interface ReserveState {
   quantity: number;
@@ -109,7 +110,7 @@ export default function ReservePage() {
               수량 <span> {quantity}</span>
             </div>
             <div>
-              픽업 가능 시간 <span>{pickupTime}</span>
+              픽업 가능 시간 <span>{formatDeadline(pickupTime || "")}</span>
             </div>
           </div>
         </div>

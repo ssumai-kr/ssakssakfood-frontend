@@ -23,10 +23,11 @@ export const getMyPrimaryLocation = async () => {
   return data;
 };
 
-export const useGetMyPrimaryLocation = () => {
+export const useGetMyPrimaryLocation = (enabled: boolean = true) => {
   return useQuery({
     queryFn: getMyPrimaryLocation,
     queryKey: ["primaryLocation"],
+    enabled: enabled,
   });
 };
 

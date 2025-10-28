@@ -1,20 +1,54 @@
 // Home.tsx
-import React, { useMemo } from "react";
-import { MENUS } from "@/Mock/menudatas";
+import React from "react";
 import { CATEGORY } from "./constants/Category";
 import MenuCard from "./components/MenuCard";
 import Carousel from "./components/Carousel";
 import { useNavigate } from "react-router-dom";
 import FooterNav from "./layout/FooterNav";
+import { useGetHomeMenus, useGetHomeMenusGuest } from "@/api/menu/menu";
+import { isLoggedIn } from "@/utils/getUserInfo";
+import { useGetMyPrimaryLocation } from "@/api/location/location";
+import useGeolocation from "@/hooks/useGeolocation";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const loggedIn = isLoggedIn();
 
-  const topDiscountMenus = useMemo(() => {
-    return [...MENUS]
-      .sort((a, b) => b.discountRate - a.discountRate)
-      .slice(0, 6);
-  }, []);
+  // 로그인한 경우에만 대표 주소 조회
+  const { data: primaryLocation } = useGetMyPrimaryLocation(loggedIn);
+
+  // geolocation 정보 가져오기 (비회원이거나 대표 주소가 없을 때 사용)
+  const { latitude, longitude } = useGeolocation();
+
+  // 비회원이거나 대표 주소가 없는 경우
+  const shouldUseGuestApi = !loggedIn || !primaryLocation;
+
+  // 회원용 API (대표 주소가 있는 경우만 호출)
+  const { data: memberMenus, isLoading: memberLoading } =
+    useGetHomeMenus(!shouldUseGuestApi);
+
+  // 게스트용 API (비회원이거나 대표 주소가 없는 경우만 호출)
+  const { data: guestMenus, isLoading: guestLoading } = useGetHomeMenusGuest(
+    latitude,
+    longitude,
+    shouldUseGuestApi,
+  );
+
+  // 최종 데이터와 로딩 상태 결정
+  const homeMenus = shouldUseGuestApi ? guestMenus : memberMenus;
+  const isLoading = shouldUseGuestApi ? guestLoading : memberLoading;
+
+  // 디버깅용 콘솔 로그
+  console.log("===== Home Menus Debug =====");
+  console.log("loggedIn:", loggedIn);
+  console.log("primaryLocation:", primaryLocation);
+  console.log("shouldUseGuestApi:", shouldUseGuestApi);
+  console.log("latitude:", latitude);
+  console.log("longitude:", longitude);
+  console.log("homeMenus:", homeMenus);
+  console.log("isLoading:", isLoading);
+  console.log("homeMenus 개수:", homeMenus?.length);
+  console.log("==========================");
 
   return (
     <div className="relative">
@@ -32,7 +66,13 @@ const Home: React.FC = () => {
             onClick={() => navigate(`/category/${category.slug}`)}
             className="w-[72px] cursor-pointer"
           >
-            <div className="w-[72px] h-[72px] bg-[#D9D9D9]"></div>
+            <div className="w-[72px] h-[72px] flex items-center justify-center">
+              <img
+                src={category.icon}
+                alt={category.label}
+                className="w-full h-full object-contain"
+              />
+            </div>
             <span className="text-[14px] font-[500] flex justify-center mt-[8px]">
               {category.label}
             </span>
@@ -43,19 +83,27 @@ const Home: React.FC = () => {
       <div className="flex flex-col gap-[24px] mt-[32px] mb-[84px]">
         <span className="text-[20px] font-bold">할인율 높은 음식</span>
         <div className="flex flex-col gap-[24px]">
-          {topDiscountMenus.map((menu) => (
-            <MenuCard
-              key={menu.id}
-              id={menu.id}
-              title={menu.title}
-              storeName={menu.storeName}
-              pickupTime={menu.pickupTime}
-              originalPrice={menu.originalPrice}
-              salePrice={menu.salePrice}
-              discountRate={menu.discountRate}
-              stockCount={menu.stockCount}
-            />
-          ))}
+          {isLoading ? (
+            <div className="text-center text-gray-500 py-8">로딩 중...</div>
+          ) : !homeMenus || homeMenus.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              아직 근처에 등록된 식품이 없어요
+            </div>
+          ) : (
+            homeMenus.map((menu) => (
+              <MenuCard
+                key={menu.id}
+                id={menu.id}
+                title={menu.name}
+                storeName={menu.storeName}
+                pickupTime={menu.deadline}
+                originalPrice={menu.originalPrice}
+                salePrice={menu.discountPrice}
+                discountRate={menu.discountRate}
+                stockCount={menu.surplusQuantity}
+              />
+            ))
+          )}
         </div>
       </div>
 

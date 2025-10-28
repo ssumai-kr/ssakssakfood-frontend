@@ -30,7 +30,7 @@ export default function OwnerFooterNav() {
       label: "홈",
       icon: home,
       activeIcon: homeActive,
-      path: "/manager-home",
+      path: "/",
     },
     {
       id: "orders",

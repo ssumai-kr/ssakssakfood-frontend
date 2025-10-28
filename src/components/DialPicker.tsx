@@ -58,19 +58,6 @@ const DialPicker: React.FC<DialPickerProps> = ({
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
 
-    const currentScrollTop = containerRef.current.scrollTop;
-    // 현재 스크롤 위치를 항목 높이로 나누고 반올림하여 중앙에 있는 인덱스를 계산합니다.
-    const newIndex = Math.max(
-      0,
-      Math.min(items.length - 1, Math.round(currentScrollTop / ITEM_HEIGHT)),
-    );
-
-    const newValue = items[newIndex].value;
-
-    if (newValue !== selectedValue) {
-      onValueChange(newValue);
-    }
-
     // 스크롤이 멈추면 snapToClosestItem을 호출하도록 타이머 초기화 (debouncing)
     if (snapTimerRef.current) {
       clearTimeout(snapTimerRef.current);
@@ -81,7 +68,7 @@ const DialPicker: React.FC<DialPickerProps> = ({
         snapToClosestItem();
       }, 150) as unknown as number;
     }
-  }, [items, selectedValue, onValueChange, isDragging, snapToClosestItem]);
+  }, [isDragging, snapToClosestItem]);
 
   // 초기 위치 설정 (선택된 항목으로 스크롤)
   useEffect(() => {
@@ -91,18 +78,28 @@ const DialPicker: React.FC<DialPickerProps> = ({
     }
   }, [items, selectedIndex]);
 
-  // 마우스 휠 이벤트 처리
-  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+  // 마우스 휠 이벤트를 네이티브로 처리 (패시브 이벤트 리스너 문제 해결)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-    event.preventDefault();
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
 
-    const scrollAmount = event.deltaY;
-    const adjustedScrollAmount = scrollAmount * SCROLL_SPEED_MULTIPLIER;
+      const scrollAmount = event.deltaY;
+      const adjustedScrollAmount = scrollAmount * SCROLL_SPEED_MULTIPLIER;
 
-    containerRef.current.scrollTop += adjustedScrollAmount;
-    handleScroll();
-  };
+      container.scrollTop += adjustedScrollAmount;
+      handleScroll();
+    };
+
+    // passive: false로 설정하여 preventDefault 허용
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [handleScroll]);
 
   const handleStart = (event: React.MouseEvent | React.TouchEvent) => {
     if (!containerRef.current) return;
@@ -154,7 +151,6 @@ const DialPicker: React.FC<DialPickerProps> = ({
         className={`w-full overflow-y-scroll no-scrollbar`}
         style={{ height: VISIBLE_ITEMS * ITEM_HEIGHT }}
         onScroll={handleScroll}
-        onWheel={handleWheel}
         onMouseDown={handleStart}
         onMouseMove={handleMove}
         onMouseUp={handleEnd}

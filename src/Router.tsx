@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
-import Home from "./Home";
+import HomePage from "./pages/HomePage";
 import Layout from "./layout/HomePage";
 import ErrorPage from "./pages/ErrorPage";
 import TermPage from "./pages/login/TermPage";
@@ -21,21 +21,31 @@ import StorePage from "./pages/Store/StorePage";
 import ReservePage from "./pages/Reserve/ReservePage";
 import OwnerInformation from "@/pages/onBoarding/onBoardingOwner";
 import StoreInformation from "@/pages/onBoarding/onBoardingStore";
-import NearbyPage from "@/pages/NearBy/NearByPage";
-import NearbyRegister from "@/pages/NearBy/NearByRegister";
-import ManagerHome from "./pages/ManagerHome/ManagerHome";
 import AllfoodsPage from "./pages/ManagerHome/AllFoodsPage";
 import NearbyEdit from "@/pages/NearBy/NearByEdit";
 import AddFoodPage from "./pages/ManagerHome/AddFoodPage";
 import AddfoodEditPage from "./pages/ManagerHome/AddFoodEditPage";
+import AuthGuard from "@/components/AuthGuard";
+import NearbyPage from "./pages/NearBy/NearByPage";
+import NearbyRegister from "./pages/NearBy/NearByRegister";
+
+// 비회원 접근을 막습니다.
+const withAuthGuard = (Component: React.ComponentType) => {
+  return (
+    <AuthGuard>
+      <Component />
+    </AuthGuard>
+  );
+};
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <HomePage /> },
       { path: "search", element: <SearchResultPage /> },
+      // { path: "nearby", element: withAuthGuard(NearbyPage) },
       { path: "nearby", element: <NearbyPage /> },
       { path: "category/:slug", element: <CategoryPage /> },
     ],
@@ -58,26 +68,23 @@ const router = createBrowserRouter([
       { path: "/onBoarding/owner", element: <OwnerInformation /> },
       { path: "/onBoarding/store", element: <StoreInformation /> },
       //위치수정
-      { path: "/location/edit", element: <LocationEdit /> },
-      { path: "/location/search", element: <LocationSearch /> },
-      { path: "/location/map", element: <LocationMap /> },
+      { path: "/location/edit", element: withAuthGuard(LocationEdit) },
+      { path: "/location/search", element: withAuthGuard(LocationSearch) },
+      { path: "/location/map", element: withAuthGuard(LocationMap) },
       //내주변
       { path: "/nearby/register", element: <NearbyRegister /> },
       { path: "/nearby/edit/:routeId", element: <NearbyEdit /> },
-
       //매장별 식품
-      { path: "/store/:id", element: <StorePage /> },
+      { path: "/store/:id", element: withAuthGuard(StorePage) },
       //예약
-      { path: "/menu/:id/reserve", element: <ReservePage /> },
-      //임시 사장님 홈 화면 -> ROLE 기반 라우팅 후 변경 예정
-      { path: "/manager-home", element: <ManagerHome /> },
-      { path: "/allfoods", element: <AllfoodsPage /> },
-      { path: "/addfood", element: <AddFoodPage /> },
+      { path: "/menu/:id/reserve", element: withAuthGuard(ReservePage) },
+      { path: "/allfoods", element: withAuthGuard(AllfoodsPage) },
+      { path: "/addfood", element: withAuthGuard(AddFoodPage) },
     ],
   },
-  //메뉴 상세 페이지
-  { path: "menu/:id", element: <MenuDetailPage /> },
-  { path: "/addfood/:id", element: <AddfoodEditPage /> },
+  //메뉴 상세 페이지 (로그인 필수)
+  { path: "menu/:id", element: withAuthGuard(MenuDetailPage) },
+  { path: "/addfood/:id", element: withAuthGuard(AddfoodEditPage) },
 ]);
 
 export default router;

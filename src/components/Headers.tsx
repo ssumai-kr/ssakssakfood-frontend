@@ -42,7 +42,7 @@ export function LocationHeader({ location }: LocationHeaderProps) {
           src={chevronDownImg}
           alt="지역 설정"
           className="ml-auto cursor-pointer"
-          onClick={() => navigate("/location/search")}
+          onClick={() => navigate("/location/edit")}
         />
       </div>
     </header>

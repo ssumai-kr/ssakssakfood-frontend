@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, SetStateAction, Dispatch } from "react";
 import Minus from "@/assets/icons/minus.svg";
 import Plus from "@/assets/icons/plus.svg";
+import { formatDeadline } from "@/utils/dateFormatter";
 
 interface OrderBottomSheetProps {
   isOpen: boolean;
@@ -155,7 +156,7 @@ export default function OrderBottomSheet({
                 <span className="text-[14px] font-semibold">{storeName}</span>
               </div>
               <div className="flex items-center gap-2 text-[14px] text-[#7F7F7F]">
-                픽업 가능 시간 <span>{pickupTime}</span>
+                픽업 가능 시간 <span>{formatDeadline(pickupTime)}</span>
               </div>
             </div>
           </div>

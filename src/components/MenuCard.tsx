@@ -2,6 +2,7 @@ import mockImg from "@/assets/icons/bread.svg";
 import StockBadge from "./StockBadge";
 import { useNavigate } from "react-router-dom";
 import closeImg from "@/assets/icons/x-circle.svg";
+import { formatDeadline } from "@/utils/dateFormatter";
 interface MenuCardProps {
   id: number;
   title: string;
@@ -52,7 +53,7 @@ export default function MenuCard({
           </div>
           <div className="flex gap-[10px] text-[14px] font-[600] text-[#7F7F7F]">
             픽업 가능시간
-            <span>{pickupTime}</span>
+            <span>{formatDeadline(pickupTime)}</span>
           </div>
         </div>
         <div className="flex justify-end w-full">
@@ -224,7 +225,7 @@ export function MenuTodayCard({
         <div className="flex flex-col gap-[2px]">
           <span className="text-[18px] font-bold truncate">{name}</span>
           <div className="text-[14px] text-[#7F7F7F]">
-            마감기한 <span>{dueDate}</span>
+            마감기한 <span>{formatDeadline(dueDate)}</span>
           </div>
         </div>
 
