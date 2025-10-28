@@ -60,6 +60,12 @@
   --color-grey-1: #3b3b3b;
   --color-black: #252525;
   --color-red: #f30000;
+
+  /*그라디언트*/
+  --color-gradient-main1: linear-gradient(90deg, #fe7549 0%, #d7562d 100%);
+
+  /* Drop Shadows */
+  --shadow-main1: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 @layer base {

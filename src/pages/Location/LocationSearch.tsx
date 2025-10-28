@@ -9,6 +9,8 @@ import { postLocation } from "../../api/location/location";
 import SearchIcon from "@/assets/icons/search.svg?url";
 import PageHeader from "@/components/PageHeader";
 import { useOnboardingState } from "@/store/useOnboardingStore";
+import { useNearbyState } from "@/store/useRouteStore";
+import { useNearbyUiState } from "@/store/useNearbyStore";
 
 export interface Place {
   place_name: string;
@@ -41,6 +43,24 @@ export default function LocationSearch() {
     location.state === "owner" || location.state?.owner === "owner";
   // const mode = location.state?.mode ?? "fill-only";
   const mode = location.state?.mode ?? (isOwner ? "fill-only" : "call-api");
+
+  //내주변
+  const isNearbyStart = location.state === "nearbyStart";
+  const isNearbyEnd = location.state === "nearbyEnd";
+
+  const navState = location.state;
+  //내주변 수정
+  const isNearbyStartEdit = navState?.state === "nearbyStartEdit";
+  const isNearbyEndEdit = navState?.state === "nearbyEndEdit";
+
+  console.log(location.state, "로케이션상태");
+  console.log({ isNearbyStartEdit, isNearbyEndEdit });
+  // console.log(location.state.routeId);
+  const routeId = location?.state?.routeId;
+
+  const { setTemp: nearSet } = useNearbyState();
+  // const { setTemp: nearUiSet } = useNearbyUiState(); //ui 수정용
+  const { setDraft } = useNearbyUiState();
 
   const isFetchingRef = useRef(false);
   const fetchPlaces = useCallback(
@@ -149,6 +169,17 @@ export default function LocationSearch() {
               mode: isOwner ? "fill-only" : "call-api",
               owner: isOwner ? "owner" : undefined,
               returnPath: "/location/search",
+              nearby: isNearbyStartEdit
+                ? "nearbyStartEdit"
+                : isNearbyEndEdit
+                  ? "nearbyEndEdit"
+                  : undefined,
+              postNearby: isNearbyStart
+                ? "isNearbyStart"
+                : isNearbyEnd
+                  ? "isNearbyStart"
+                  : undefined,
+              routeId,
             },
           },
         );
@@ -158,12 +189,38 @@ export default function LocationSearch() {
       }
     });
   };
-  console.log(location.state);
+  // console.log(location.state);
   const { setTemp } = useOnboardingState();
   const handleRegister = async () => {
     if (selectedId === null) return;
 
     const p = results.find((item) => item.id === selectedId);
+    if (isNearbyStartEdit) {
+      //수정할때 ,
+      const payload = {
+        start: { lat: Number(p?.y), lng: Number(p?.x) },
+        startJibunAddress: p?.address_name,
+      };
+      setDraft(routeId, payload);
+
+      if (routeId) navigate(`/nearby/edit/${routeId}`);
+      else navigate(`/nearby/edit`);
+      return;
+    }
+
+    if (isNearbyEndEdit) {
+      const payload = {
+        end: { lat: Number(p?.y), lng: Number(p?.x) },
+        endJibunAddress: p?.address_name,
+      };
+      setDraft(routeId, payload);
+
+      if (routeId) navigate(`/nearby/edit/${routeId}`);
+      else navigate(`/nearby/edit`);
+      return;
+    }
+
+    // 등록
     if (isOwner) {
       setTemp({
         location: {
@@ -176,7 +233,24 @@ export default function LocationSearch() {
       navigate("/onboarding/store");
       return;
     }
-    console.log(p);
+
+    if (isNearbyStart) {
+      nearSet({
+        start: { lat: Number(p?.y), lng: Number(p?.x) },
+        startJibunAddress: p?.address_name,
+      });
+      navigate("/nearby/register");
+      return;
+    }
+
+    if (isNearbyEnd) {
+      nearSet({
+        end: { lat: Number(p?.y), lng: Number(p?.x) },
+        endJibunAddress: p?.address_name,
+      });
+      navigate("/nearby/register");
+      return;
+    }
     const payload = {
       kakaoPlaceId: p?.id.toString() ?? "",
       bcode: p?.place_name ?? "",
@@ -202,7 +276,6 @@ export default function LocationSearch() {
       alert("위치 등록에 실패했습니다.");
     }
   };
-
   const handleSelect = (id: number) => {
     setSelectedId((prev) => (prev === id ? null : id));
   };
@@ -249,6 +322,11 @@ export default function LocationSearch() {
               place={item.place_name ?? ""}
               address={item.address_name ?? ""}
               owner={isOwner}
+              routeId={routeId}
+              isNearbyStartEdit={isNearbyStartEdit}
+              isNearbyEndEdit={isNearbyEndEdit}
+              isNearbyStart={isNearbyStart}
+              isNearbyEnd={isNearbyEnd}
             />
           </div>
         );

@@ -7,6 +7,8 @@ import Search from "@assets/icons/search.svg?react";
 import Marker from "@/assets/icons/map-marker.svg?url";
 import PageHeader from "@/components/PageHeader";
 import { useOnboardingState } from "@/store/useOnboardingStore";
+import { useNearbyUiState } from "@/store/useNearbyStore";
+import { useNearbyState } from "@/store/useRouteStore";
 
 declare global {
   interface Window {
@@ -30,15 +32,61 @@ export default function LocationMap() {
   const returnPath = location.state?.returnPath ?? "/";
   // const owner = location.state?.owner === "owner";
   const { setTemp } = useOnboardingState();
+  const { setTemp: nearSet } = useNearbyState();
 
   // const mode = location.state?.mode ?? "call-api";
 
   const owner = location.state === "owner" || location.state?.owner === "owner";
   const mode = location.state?.mode ?? (owner ? "fill-only" : "call-api");
 
-  console.log(location);
-  console.log(owner);
+  const navState = location.state;
+  console.log(navState);
+  //내주변 수정
+  const isNearbyStartEdit = navState?.nearby === "nearbyStartEdit";
+  const isNearbyEndEdit = navState?.nearby === "nearbyEndEdit";
+  const isNearbyStart = navState?.postNearby === "isNearbyStart";
+  const isNearbyEnd = navState?.postNearby === "isNearbyEnd";
+  const routeId = location.state.routeId;
+  const { setDraft } = useNearbyUiState();
+
+  // console.log(isNearbyStartEdit);
+
+  // console.log(location);
+  // console.log(owner);
+  console.log(routeId, "mapid");
+
   const handleSelect = async (placePayload: gpsLocationSavedRequest) => {
+    if (isNearbyStartEdit || isNearbyEndEdit) {
+      if (isNearbyStartEdit) {
+        setDraft(routeId, {
+          start: { lat: Number(y), lng: Number(x) },
+          startJibunAddress: address ?? "",
+        });
+      } else {
+        setDraft(routeId, {
+          end: { lat: Number(y), lng: Number(x) },
+          endJibunAddress: address ?? "",
+        });
+      }
+      navigate(`/nearby/edit/${routeId}`);
+      return;
+    }
+    if (isNearbyStart || isNearbyEnd) {
+      if (isNearbyStart) {
+        nearSet({
+          start: { lat: Number(y), lng: Number(x) },
+          startJibunAddress: address ?? "",
+        });
+      } else {
+        nearSet({
+          end: { lat: Number(y), lng: Number(x) },
+          endJibunAddress: address ?? "",
+        });
+      }
+      navigate(`/nearby/register`);
+      return;
+    }
+
     if (owner || mode === "fill-only") {
       setTemp({
         location: {
@@ -54,6 +102,7 @@ export default function LocationMap() {
       }
       return;
     }
+    //일반등록
     try {
       await postGpsLocation(placePayload);
       navigate("/location/edit");

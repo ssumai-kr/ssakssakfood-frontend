@@ -8,7 +8,6 @@ import OnBoardingConfirmPage from "./pages/onBoarding/onBoardingConfirm";
 import OnBoardingPage from "./pages/onBoarding/onBoarding";
 import OnBoardingPassPage from "./pages/onBoarding/onBoardingPass";
 import SearchResultPage from "./pages/SearchResult/SearchResultPage";
-import NearByPage from "./pages/NearBy/NearByPage";
 import LocationEdit from "./pages/Location/LocationEdit";
 import LocationSearch from "./pages/Location/LocationSearch";
 import LocationMap from "./pages/Location/LocationMap";
@@ -22,8 +21,11 @@ import StorePage from "./pages/Store/StorePage";
 import ReservePage from "./pages/Reserve/ReservePage";
 import OwnerInformation from "@/pages/onBoarding/onBoardingOwner";
 import StoreInformation from "@/pages/onBoarding/onBoardingStore";
+import NearbyPage from "@/pages/NearBy/NearByPage";
+import NearbyRegister from "@/pages/NearBy/NearByRegister";
 import ManagerHome from "./pages/ManagerHome/ManagerHome";
 import AllfoodsPage from "./pages/ManagerHome/AllFoodsPage";
+import NearbyEdit from "@/pages/NearBy/NearByEdit";
 import AddFoodPage from "./pages/ManagerHome/AddFoodPage";
 import AddfoodEditPage from "./pages/ManagerHome/AddFoodEditPage";
 
@@ -34,7 +36,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "search", element: <SearchResultPage /> },
-      { path: "nearby", element: <NearByPage /> },
+      { path: "nearby", element: <NearbyPage /> },
       { path: "category/:slug", element: <CategoryPage /> },
     ],
   },
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
       { path: "/location/edit", element: <LocationEdit /> },
       { path: "/location/search", element: <LocationSearch /> },
       { path: "/location/map", element: <LocationMap /> },
+      //내주변
+      { path: "/nearby/register", element: <NearbyRegister /> },
+      { path: "/nearby/edit/:routeId", element: <NearbyEdit /> },
+
       //매장별 식품
       { path: "/store/:id", element: <StorePage /> },
       //예약

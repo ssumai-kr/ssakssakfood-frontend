@@ -56,6 +56,7 @@ export default function OnBoardingPassPage() {
       navigate("/onBoarding/owner");
       setTemp({ loginId: id, password: pw });
     } else {
+      setTemp({ loginId: id, password: pw });
       handleSignupForm.mutate({
         email,
         loginId: id,
@@ -66,7 +67,7 @@ export default function OnBoardingPassPage() {
     }
   };
 
-  const idValid = /^[a-zA-Z0-9]{2,20}$/.test(id); //영어 숫자 2~20글자
+  const idValid = /^[a-zA-Z0-9]{4,20}$/.test(id); //영어 숫자 2~20글자
   const nextBtn = idValid && noSpacePattern && pattern2 && isMatch;
 
   return (

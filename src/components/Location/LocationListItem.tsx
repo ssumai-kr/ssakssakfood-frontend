@@ -14,6 +14,11 @@ interface LocationListProps {
   input?: string;
   owner?: boolean;
   // mode?: "fill-only" | "call-api";
+  routeId?: number;
+  isNearbyStartEdit: boolean;
+  isNearbyEndEdit: boolean;
+  isNearbyStart: boolean;
+  isNearbyEnd: boolean;
 }
 export default function LocationList({
   roadAddress,
@@ -25,9 +30,17 @@ export default function LocationList({
   y,
   input,
   owner,
+  routeId,
+  isNearbyEndEdit,
+  isNearbyStartEdit,
+  isNearbyStart,
+  isNearbyEnd,
 }: LocationListProps) {
   const navigate = useNavigate();
-  console.log(owner, "지도에서보기");
+  // console.log(owner, "지도에서보기");
+  console.log(routeId);
+  //내주변 수정
+
   const handleViewOnMapClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -39,9 +52,21 @@ export default function LocationList({
           owner: owner ? "owner" : undefined,
           mode: owner ? "fill-only" : "call-api",
           returnPath: "/location/search",
+          nearby: isNearbyStartEdit
+            ? "nearbyStartEdit"
+            : isNearbyEndEdit
+              ? "nearbyEndEdit"
+              : undefined,
+          postNearby: isNearbyStart
+            ? "isNearbyStart"
+            : isNearbyEnd
+              ? "isNearbyEnd"
+              : undefined,
+          routeId,
         },
       },
     );
+    console.log(isNearbyStart);
     console.log(`지도에서 보기 클릭: ${place}, ${address}`);
   };
 

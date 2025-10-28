@@ -4,6 +4,7 @@ import { useOnboardingState } from "@/store/useOnboardingStore";
 import { useNavigate } from "react-router-dom";
 export default function OnBoardingComplete() {
   const { loginId } = useOnboardingState();
+  console.log(loginId);
   const navigate = useNavigate();
   return (
     <div className="flex items-center flex-col min-h-dvh justify-between">
