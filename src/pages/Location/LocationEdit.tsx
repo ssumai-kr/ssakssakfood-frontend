@@ -36,7 +36,28 @@ export default function LocationEdit() {
   const patchLocation = usePatchLocation();
   const handlePatchLocation = (id: number) => {
     console.log("안녕");
-    patchLocation.mutate(id);
+    patchLocation.mutate(id, {
+      onSuccess: () => {
+        const selected = myLocationData?.find(
+          (i: myLocationResponseDto) => i.userLocationId === id,
+        );
+        console.log(selected);
+        if (selected) {
+          const cacheData = {
+            latitude: Number(selected.latitude),
+            longitude: Number(selected.longitude),
+            address: selected.jibunAddress.split(" ")[2] || null,
+            fullAdress: selected.jibunAddress.split(" ").slice(0, 3).join(" "),
+          };
+          // console.log(cacheData);
+          sessionStorage.setItem(
+            "cached_geolocation",
+            JSON.stringify(cacheData),
+          );
+        }
+        // alert("대표 위치가 변경되었습니다.");
+      },
+    });
   };
   console.log(myLocationData, "겟");
 

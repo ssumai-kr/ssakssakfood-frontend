@@ -22,6 +22,7 @@ declare global {
 }
 export default function NearbyPage() {
   const { latitude, longitude, loading, error } = useGeolocation();
+  console.log(latitude, longitude, "위치치치치");
   const getNearbyAlong = useAlongRoute();
 
   const [ismodal, setIsModal] = useState(false);

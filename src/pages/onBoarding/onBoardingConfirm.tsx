@@ -61,6 +61,7 @@ export default function OnBoardingConfirmPage() {
     },
     onError: (err) => console.log(err),
   });
+  console.log(location.state);
 
   const handleNext = () => {
     const email = emailValue.trim();
@@ -85,7 +86,7 @@ export default function OnBoardingConfirmPage() {
         <ProgressBar
           step={location.state === "owner" ? 1 : 2}
           className="my-8"
-          owner={true}
+          owner={location.state === "owner" ? true : false}
         />
         <section className="flex flex-col gap-6">
           <div>

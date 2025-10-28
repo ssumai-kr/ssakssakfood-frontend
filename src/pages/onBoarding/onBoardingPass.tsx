@@ -57,6 +57,7 @@ export default function OnBoardingPassPage() {
       setTemp({ loginId: id, password: pw });
     } else {
       setTemp({ loginId: id, password: pw });
+      navigate("/onBoarding/card");
       handleSignupForm.mutate({
         email,
         loginId: id,
@@ -78,7 +79,7 @@ export default function OnBoardingPassPage() {
         <ProgressBar
           className="my-8"
           step={location.state === "owner" ? 2 : 4}
-          owner={true}
+          owner={location.state === "owner" ? true : false}
         />
         {/* 아디 */}
         <div className="flex flex-col gap-6">

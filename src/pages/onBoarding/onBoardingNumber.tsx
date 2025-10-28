@@ -14,7 +14,7 @@ export default function OnboardingNumber() {
   const { setTemp } = useOnboardingState();
   const handleNext = () => {
     setTemp({ phone: phone });
-    navigate("/onBoarding/pass");
+    navigate("/onBoarding/pass", { state: "s" });
   };
 
   const phoneRegex = /^01[0-9]-[0-9]{4}-[0-9]{4}$/;

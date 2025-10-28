@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useMatch } from "react-router-dom";
 import { LocationHeader } from "../components/Headers";
 import SearchInput from "@/components/SearchInput";
 import useGeolocation from "@/hooks/useGeolocation";
@@ -10,7 +10,7 @@ export default function Layout() {
   const location = useLocation();
   const memberType = getMemberType();
   const loggedIn = isLoggedIn();
-
+  const nearby = useMatch("/nearby");
   // 로그인한 경우에만 대표 주소 조회
   const { data: primaryLocationData, isLoading: isPrimaryLoading } =
     useGetMyPrimaryLocation(loggedIn);
@@ -48,7 +48,8 @@ export default function Layout() {
 
   // OWNER이고 루트 경로("/")인 경우 헤더를 보여주지 않음
   const shouldShowHeader = !(
-    memberType === "OWNER" && location.pathname === "/"
+    (memberType === "OWNER" && location.pathname === "/") ||
+    nearby
   );
 
   return (
