@@ -3,7 +3,7 @@ import InputField from "../../components/InputField";
 import LogoImg from "@assets/images/logo.png";
 import Login from "@assets/images/login.png";
 import managerLogin from "@assets/images/manager-login.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserLogin } from "@/api/mamber/onboarding";
 import { useForm } from "react-hook-form";
@@ -16,19 +16,7 @@ export default function LoginPage() {
 
   const revertManager = () => setManager(true);
 
-  const { register, watch, reset } = useForm({
-    defaultValues: {
-      login: "minsol",
-      password: "qwer1234@Q",
-    },
-  });
-  useEffect(() => {
-    reset(
-      manager
-        ? { login: "minsol", password: "qwer1234@Q" } // 사장님 프리셋
-        : { login: "qwer1234", password: "qwer1234Q@" }, // 고객 프리셋
-    );
-  }, [manager, reset]);
+  const { register, watch } = useForm({});
 
   const handleLogin = () => {
     userLoginForm.mutate({

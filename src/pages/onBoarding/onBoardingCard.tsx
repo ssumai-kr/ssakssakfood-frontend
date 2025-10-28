@@ -20,13 +20,16 @@ export default function OnBoardingCardPage() {
     setPreview(url);
   };
 
+  const cardUrl = localStorage.getItem("cardUrl") || undefined;
   const handleNext = () => {
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
 
       upLoadCardImg.mutate(formData, {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          console.log(res);
+          localStorage.setItem("cardImg", res.data.imageUrl);
           navigate("/onBoarding/complete");
         },
       });
@@ -52,7 +55,7 @@ export default function OnBoardingCardPage() {
 
         <ImagePickerBox
           file={file}
-          previewUrl={preview}
+          previewUrl={preview || cardUrl}
           onChange={handlePick}
           boxClass="w-full h-[240px]"
         />
