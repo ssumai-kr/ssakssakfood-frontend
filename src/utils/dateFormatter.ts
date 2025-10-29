@@ -17,7 +17,7 @@ export const formatDeadline = (isoDateString: string): string => {
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
-    return `~${month}/${day} ${hours}:${minutes} 까지`;
+    return `~${month}/${day} ${hours}:${minutes}`;
   } catch (error) {
     // 에러 발생 시 원본 문자열 반환
     console.log(error);

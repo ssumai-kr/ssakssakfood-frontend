@@ -115,7 +115,6 @@ export default function CategoryPage() {
       {isLoading ? (
         <p className="text-gray-500 text-sm mt-10 text-center">로딩 중...</p>
       ) : filteredMenus.length > 0 ? (
-        // ⭐️ Ref 추가: 메뉴 목록 컨테이너에 menuListRef 연결
         <div ref={menuListRef} className="flex flex-col gap-6 mt-4">
           {filteredMenus.map((menu) => (
             <MenuCard
@@ -128,6 +127,7 @@ export default function CategoryPage() {
               salePrice={menu.discountPrice}
               discountRate={menu.discountRate}
               stockCount={menu.surplusQuantity}
+              isShared={menu.shared}
             />
           ))}
         </div>

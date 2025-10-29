@@ -7,6 +7,7 @@ interface UserData {
   memberType: string;
   memberId: number;
   tokenType?: string;
+  hasChildMealCard?: boolean;
 }
 
 interface UserStoreType {

@@ -1,12 +1,13 @@
 import chevronRight from "@/assets/images/chevron-right.png";
+import basicImage from "@/assets/images/basic.svg";
 import { useNavigate } from "react-router-dom";
 
 //가게 정보 카드 컴포넌트
 interface StoreInfoCardProps {
-  id: number; //가게 ID
-  img?: string; //가게 이미지
-  name?: string; //가게 이름
-  address?: string; //가게 주소
+  id: number;
+  img?: string;
+  name?: string;
+  address?: string;
 }
 
 export default function StoreInfoCard({
@@ -23,8 +24,12 @@ export default function StoreInfoCard({
       onClick={() => navigate(`/store/${id}`)}
     >
       <div className="flex justify-center items-center gap-4">
-        <div className="bg-white w-[56px] h-[56px] rounded-full text-[10px] flex items-center justify-center">
-          {img}
+        <div className="bg-gray-300 w-[56px] h-[56px] rounded-full overflow-hidden flex items-center justify-center">
+          <img
+            src={img || basicImage}
+            alt={name || "가게 이미지"}
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="flex flex-col">
           <span className="text-[18px] font-bold">{name}</span>

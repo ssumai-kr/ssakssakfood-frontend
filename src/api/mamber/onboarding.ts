@@ -60,6 +60,7 @@ export const useUserLogin = () => {
         accessToken: user.data.accessToken,
         memberId: user.data.memberId,
         memberType: user.data.memberType,
+        hasChildMealCard: user.data.hasChildMealCard,
       });
       navigate("/");
     },
