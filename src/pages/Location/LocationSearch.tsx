@@ -177,7 +177,7 @@ export default function LocationSearch() {
               postNearby: isNearbyStart
                 ? "isNearbyStart"
                 : isNearbyEnd
-                  ? "isNearbyStart"
+                  ? "isNearbyEnd"
                   : undefined,
               routeId,
             },

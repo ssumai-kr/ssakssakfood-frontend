@@ -12,6 +12,8 @@ import { LatLng, NearbyResponseDto } from "@/types/nearby";
 import RouteMap from "@/pages/NearBy/NearbyMap";
 import FooterNav from "@/layout/FooterNav";
 import NearbyStorePage from "@/pages/NearBy/nearbyStore";
+import { useGetMyPrimaryLocation } from "@/api/location/location";
+import { isLoggedIn } from "@/utils/getUserInfo";
 
 // import MenuCard from "@/components/MenuCard";
 declare global {
@@ -21,6 +23,22 @@ declare global {
   }
 }
 export default function NearbyPage() {
+  const loggedIn = isLoggedIn();
+
+  const { data: primaryLocation } = useGetMyPrimaryLocation(loggedIn);
+  console.log(primaryLocation);
+  useEffect(() => {
+    if (loggedIn && primaryLocation) {
+      const cacheData = {
+        latitude: primaryLocation.latitude,
+        longitude: primaryLocation.longitude,
+        address: primaryLocation.jibunAddress || null,
+        fullAdress: primaryLocation.roadAddress || null,
+      };
+      sessionStorage.setItem("cached_geolocation", JSON.stringify(cacheData));
+    }
+  }, [loggedIn, primaryLocation]);
+
   const { latitude, longitude, loading, error } = useGeolocation();
   console.log(latitude, longitude, "위치치치치");
   const getNearbyAlong = useAlongRoute();
@@ -115,26 +133,27 @@ export default function NearbyPage() {
         }),
       });
 
-      getNearbyAlong.mutate(
-        {
-          polyline: [
-            { lat: latitude, lng: longitude },
-            { lat: latitude, lng: longitude },
-          ],
-          radiusMeters: 2000,
-          category: [0],
-        },
-        {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onSuccess: (res: any) => {
-            // res.markers 사용
-            console.log(res, "근처경로조회");
-            renderStoreMarkers(res?.markers ?? []);
+      if (!selectedRoute) {
+        getNearbyAlong.mutate(
+          {
+            polyline: [
+              { lat: latitude, lng: longitude },
+              { lat: latitude, lng: longitude },
+            ],
+            radiusMeters: 2000,
+            category: [0],
           },
-        },
-      );
+          {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onSuccess: (res: any) => {
+              console.log(res, "근처경로조회");
+              renderStoreMarkers(res?.markers ?? []);
+            },
+          },
+        );
+      }
     }); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, error, latitude, longitude]);
+  }, [loading, error, latitude, longitude, selectedRoute]);
   const { data } = useGetNearby();
   // console.log(data);
 
@@ -203,7 +222,7 @@ export default function NearbyPage() {
 
         <div className="flex">
           <div
-            className="ml-6 mr-2 flex rounded-4xl h-6 w-22 py-1 px-3 gap-2 pointer-events-auto"
+            className="ml-6 mr-2 flex rounded-4xl h-6  py-1 px-3 gap-2 pointer-events-auto"
             style={{ background: "var(--color-gradient-main1)" }}
             onClick={handleModal}
           >

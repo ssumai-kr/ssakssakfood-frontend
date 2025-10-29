@@ -8,10 +8,10 @@ import { useNicknameCheck } from "../../api/mamber/onboarding";
 import PageHeader from "@/components/PageHeader";
 
 export default function OnBoardingPage() {
-  const [nicknameValue, setNickname] = useState<string>("");
   const navigate = useNavigate();
 
-  const { setTemp } = useOnboardingState();
+  const { setTemp, nickname } = useOnboardingState();
+  const [nicknameValue, setNickname] = useState<string>(nickname || "");
   const handleNext = () => {
     setTemp({ nickname: nicknameValue });
     navigate("/onBoarding/confirm");

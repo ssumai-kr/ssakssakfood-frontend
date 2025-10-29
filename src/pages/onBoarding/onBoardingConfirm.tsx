@@ -18,10 +18,10 @@ export default function OnBoardingConfirmPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [emailValue, setEmailValue] = useState<string>("");
-  const [codeValue, setCodeValue] = useState<string>("");
+  const { setTemp, email } = useOnboardingState();
 
-  const { setTemp } = useOnboardingState();
+  const [emailValue, setEmailValue] = useState<string>(email || "");
+  const [codeValue, setCodeValue] = useState<string>("");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const codeRegex = /^\d{6}$/;

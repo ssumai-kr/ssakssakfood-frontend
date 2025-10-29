@@ -90,44 +90,52 @@ export default function LocationEdit() {
         <div className=" h-1 bg-grey-5 mb-4 -mx-6"></div>
         <SearchLocationBtn className="mb-6" />
       </div>
-      <section className=" flex flex-col">
-        <div className="flex flex-col gap-4 ">
-          <p className="subtitle-b-16">선택된 위치</p>
-          <div className="bg-sub1 body-r-16 rounded-lg p-4 mb-6">
-            <>
-              <p className="subtitle-b-16 mb-2">{primaryData?.buildingName}</p>
-              <p className="body-r-14 text-grey-2">
-                {primaryData?.jibunAddress}
-              </p>
-            </>
+      {myLocationData.length > 0 ? (
+        <section className=" flex flex-col">
+          <div className="flex flex-col gap-4 ">
+            <p className="subtitle-b-16">선택된 위치</p>
+            <div className="bg-sub1 body-r-16 rounded-lg p-4 mb-6">
+              <>
+                <p className="subtitle-b-16 mb-2">
+                  {primaryData?.buildingName}
+                </p>
+                <p className="body-r-14 text-grey-2">
+                  {primaryData?.jibunAddress}
+                </p>
+              </>
+            </div>
           </div>
+          <div className="flex  items-center mb-4">
+            <p className="subtitle-b-16 mr-auto">등록된 위치</p>
+            <button
+              className="py-1 px-3 rounded-s-sm bg-grey-5 body-r-14"
+              onClick={() => setIsEdit((pre) => !pre)}
+            >
+              {isEdit ? "수정" : "저장"}
+            </button>
+          </div>
+          {notPrimary?.map((item: myLocationResponseDto) => {
+            const responseBulidingName =
+              item?.buildingName === null ? "현재 위치" : item?.buildingName;
+            return (
+              <Location
+                key={item.userLocationId}
+                jibunAddress={item.jibunAddress}
+                buildingName={responseBulidingName}
+                editMode={!isEdit}
+                userLocationId={Number(item?.userLocationId)}
+                onClick={() => {
+                  handlePatchLocation(item.userLocationId);
+                }}
+              />
+            );
+          })}
+        </section>
+      ) : (
+        <div className="text-center mt-5">
+          <p>등록된 위치가 없습니다.</p>위치를 추가해주세요
         </div>
-        <div className="flex  items-center mb-4">
-          <p className="subtitle-b-16 mr-auto">등록된 위치</p>
-          <button
-            className="py-1 px-3 rounded-s-sm bg-grey-5 body-r-14"
-            onClick={() => setIsEdit((pre) => !pre)}
-          >
-            {isEdit ? "수정" : "저장"}
-          </button>
-        </div>
-        {notPrimary?.map((item: myLocationResponseDto) => {
-          const responseBulidingName =
-            item?.buildingName === null ? "현재 위치" : item?.buildingName;
-          return (
-            <Location
-              key={item.userLocationId}
-              jibunAddress={item.jibunAddress}
-              buildingName={responseBulidingName}
-              editMode={!isEdit}
-              userLocationId={Number(item?.userLocationId)}
-              onClick={() => {
-                handlePatchLocation(item.userLocationId);
-              }}
-            />
-          );
-        })}
-      </section>
+      )}
     </div>
   );
 }

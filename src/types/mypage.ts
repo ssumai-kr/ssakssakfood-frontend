@@ -8,6 +8,13 @@ export type UserPwRequestDTO = {
 };
 
 export type OwnerProfileRequestDTO = {
-  ownerName?: null;
-  phoneNumber: string;
+  ownerName?: null | string;
+  phoneNumber?: null | string;
+};
+
+export type OwnerStoreRequestDTO = {
+  storeName?: string | null;
+  storePhoneNumber?: string | null;
+  roadAddress?: string | null;
+  detailAddress?: string | null;
 };

@@ -20,10 +20,18 @@ export default function OnBoardingPassPage() {
   //비번 볼래말래
   const [showPwd, setShowPwd] = useState<boolean>(false);
   const [showCheckPwd, setShowCheckPwd] = useState<boolean>(false);
-  const { register, watch } = useForm({ mode: "onChange" });
 
   //회원가입
-  const { email, nickname, phone, setTemp } = useOnboardingState();
+  const { email, nickname, phone, setTemp, loginId, password } =
+    useOnboardingState();
+  const { register, watch } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      id: loginId || "",
+      password: password || "",
+      passwordCheck: password || "",
+    },
+  });
 
   const pw = watch("password") || "";
   const pwChecked = watch("passwordCheck") || "";
@@ -57,7 +65,6 @@ export default function OnBoardingPassPage() {
       setTemp({ loginId: id, password: pw });
     } else {
       setTemp({ loginId: id, password: pw });
-      navigate("/onBoarding/card");
       handleSignupForm.mutate({
         email,
         loginId: id,

@@ -24,8 +24,8 @@ export default function LoginPage() {
       password,
     });
   };
-  const loginId = watch("login");
-  const password = watch("password");
+  const loginId = watch("login")?.trim();
+  const password = watch("password")?.trim();
 
   const handleSignup = () => {
     if (manager) {

@@ -8,14 +8,22 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export default function OwnerInformation() {
-  const { register, watch } = useForm();
-  const [number, setNumber] = useState("");
   //유효성
   const [isValid, setIsValid] = useState(false);
-  const ownerName = watch("ownerName") || "";
-  const navigate = useNavigate();
-  const { setTemp } = useOnboardingState();
+  const {
+    setTemp,
+    businessRegistrationNumber: storeNumber,
+    ownerName: ownerNickName,
+  } = useOnboardingState();
+  const [number, setNumber] = useState(storeNumber ?? "");
 
+  const { register, watch } = useForm({
+    defaultValues: {
+      ownerName: ownerNickName,
+    },
+  });
+  const navigate = useNavigate();
+  const ownerName = watch("ownerName") || "";
   const handleInputNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     const number = e.target.value.replace(/[^0-9]/g, ""); //t숫자만
     let formatted = "";

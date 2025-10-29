@@ -3,9 +3,14 @@ import Congratulations from "@/assets/icons/congratulations.svg";
 import { useOnboardingState } from "@/store/useOnboardingStore";
 import { useNavigate } from "react-router-dom";
 export default function OnBoardingComplete() {
-  const { loginId } = useOnboardingState();
+  const { loginId, reset } = useOnboardingState();
   console.log(loginId);
   const navigate = useNavigate();
+
+  const handleComplete = () => {
+    navigate("/login");
+    reset();
+  };
   return (
     <div className="flex items-center flex-col min-h-dvh justify-between">
       <div className="flex-1 flex flex-col items-center justify-center  ">
@@ -20,7 +25,7 @@ export default function OnBoardingComplete() {
         labelName={"완료"}
         className="mb-8"
         disabled={false}
-        onClick={() => navigate("/login")}
+        onClick={handleComplete}
       />
     </div>
   );

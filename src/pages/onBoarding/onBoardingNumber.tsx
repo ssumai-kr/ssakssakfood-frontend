@@ -7,17 +7,18 @@ import { useState } from "react";
 import PageHeader from "@/components/PageHeader";
 
 export default function OnboardingNumber() {
-  const [phone, setPhone] = useState<string>("");
-  const [isValid, setIsValid] = useState(false);
+  const { setTemp, phone: storePhone } = useOnboardingState();
+  const [phone, setPhone] = useState<string>(storePhone ?? "");
+  // const [isValid, setIsValid] = useState(false);
   const navigate = useNavigate();
-
-  const { setTemp } = useOnboardingState();
   const handleNext = () => {
+    if (!isValid) return;
     setTemp({ phone: phone });
     navigate("/onBoarding/pass", { state: "s" });
   };
-
   const phoneRegex = /^01[0-9]-[0-9]{4}-[0-9]{4}$/;
+  const isValid = phoneRegex.test(phone);
+
   const handleInputPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
     const phoneNum = e.target.value.replace(/\D/g, "").slice(0, 11); // 숫자만, 최대 11자리
     let formatted = "";
@@ -29,9 +30,8 @@ export default function OnboardingNumber() {
       formatted = `${phoneNum.slice(0, 3)}-${phoneNum.slice(3, 7)}-${phoneNum.slice(7)}`;
     }
     setPhone(formatted);
-    setIsValid(phoneRegex.test(formatted));
+    // setIsValid(phoneRegex.test(formatted));
   };
-
   return (
     <div className="w-full flex flex-col min-h-dvh ">
       <section className="flex-1 ">

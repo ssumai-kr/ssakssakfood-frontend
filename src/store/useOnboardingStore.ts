@@ -18,6 +18,7 @@ interface OnboardingState {
   password: string;
   storeName: string;
   businessRegistrationNumber: string;
+  storeNumber: string;
   ownerName: string;
   cardUrl: string;
   location: Partial<Location>;
@@ -37,6 +38,7 @@ export const useOnboardingState = create<OnboardingState>((set) => ({
   businessRegistrationNumber: "",
   ownerName: "",
   cardUrl: "",
+  storeNumber: "",
   location: {},
   setTemp: (field) => set((state) => ({ ...state, ...field })),
   reset: () =>
@@ -53,6 +55,7 @@ export const useOnboardingState = create<OnboardingState>((set) => ({
       businessRegistrationNumber: "",
       ownerName: "",
       storeName: "",
+      storeNumber: "",
       location: {},
     }),
 }));

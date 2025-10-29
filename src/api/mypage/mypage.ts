@@ -3,6 +3,7 @@
 import api from "@/api/apiMember";
 import {
   OwnerProfileRequestDTO,
+  OwnerStoreRequestDTO,
   UserLoginRequestDTO,
   UserPwRequestDTO,
 } from "@/types/mypage";
@@ -145,7 +146,7 @@ export const useOwnerImg = () => {
   );
 };
 
-//사장프로필 변경 (핸드폰만 변경함)
+//사장프로필 변경 (대표자명,전화번호 변경함)
 export const patchOwnerProfile = async (body: OwnerProfileRequestDTO) => {
   const { data } = await api.patch("/owners/me/profile", body);
   return data;
@@ -157,7 +158,7 @@ export const usePatchOwnerProfile = () => {
     mutationFn: (body: OwnerProfileRequestDTO) => patchOwnerProfile(body),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["myProfile"], //사장인데 ...일단은
+        queryKey: ["ownerProfile"],
       });
       console.log("성공");
     },
@@ -165,16 +166,22 @@ export const usePatchOwnerProfile = () => {
   });
 };
 
-//사장 메뉴 조회
+//store프로필 변경(가게명)
+export const patchOwnerStore = async (body: OwnerStoreRequestDTO) => {
+  const { data } = await api.patch("/owners/me/store", body);
+  return data;
+};
 
-// export const getMyOwnerMenus = async (storeId: number) => {
-//   const { data } = await api.get(`/menus/stores/${storeId}/menus`);
-//   return data;
-// };
-// export const useMySoreMenus = (storeId: number) => {
-//   return useQuery({
-//     queryFn: () => getMyOwnerMenus(storeId),
-//     queryKey: ["menus"],
-//     select: (res) => res.result,
-//   });
-// };
+export const usePatchOwnerStore = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: OwnerStoreRequestDTO) => patchOwnerStore(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ownerProfile"],
+      });
+      console.log("성공");
+    },
+    onError: (err) => console.log(err),
+  });
+};

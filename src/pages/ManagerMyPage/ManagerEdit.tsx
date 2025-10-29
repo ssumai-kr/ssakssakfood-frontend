@@ -2,33 +2,49 @@ import PageHeader from "@/components/PageHeader";
 import ImgUrl from "@/assets/images/progile.png";
 import Camera from "@/assets/images/camera.png";
 import MyPageInputField from "@/components/MyPageInputFiled";
-import { useGetOwnerProfile, usePatchOwnerProfile } from "@/api/mypage/mypage";
+import {
+  useGetOwnerProfile,
+  usePatchOwnerProfile,
+  usePatchOwnerStore,
+} from "@/api/mypage/mypage";
 import { useState } from "react";
-import { useOwnerImg } from "@/api/mamber/onboarding";
 export default function ManagerEdit() {
   const { data } = useGetOwnerProfile();
   console.log(data);
-  type FieldKey = "nickname" | "name" | "password" | "phone";
+  type FieldKey =
+    | "nickname"
+    | "name"
+    | "storeName"
+    | "phone"
+    | "storePhoneNumber";
   const [open, setOpen] = useState<Record<FieldKey, boolean>>({
     nickname: false,
     name: false,
-    password: false,
+    storeName: false,
     phone: false,
+    storePhoneNumber: false,
   });
 
+  const businessNum = data?.store.businessRegistrationNumber
+    ? `${data.store.businessRegistrationNumber.slice(0, 3)}-${data.store.businessRegistrationNumber.slice(3, 5)}-${data.store.businessRegistrationNumber.slice(5, 10)}`
+    : "";
   const toggle = (k: FieldKey) =>
     setOpen((prev) => ({ ...prev, [k]: !prev[k] }));
 
   const [form, setForm] = useState({
     nickname: "",
-    loginId: "",
-    password: "",
+    name: "",
+    storeName: "",
     phone: "",
+    storePhoneNumber: "",
   });
 
-  const [preview, setPreview] = useState("");
+  // const [preview, setPreview] = useState("");
+
   //폰번호 변경 + 대표자명변경
   const handleProfile = usePatchOwnerProfile();
+  //가게명 변경
+  const handleStore = usePatchOwnerStore();
 
   const phoneRegex = /^01[0-9]-[0-9]{4}-[0-9]{4}$/;
   const handleInputPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +60,7 @@ export default function ManagerEdit() {
     setForm((prev) => ({ ...prev, phone: formatted }));
   };
 
+  //닉네임
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
       .slice(0, 20)
@@ -51,26 +68,30 @@ export default function ManagerEdit() {
     setForm((prev) => ({ ...prev, nickname: value }));
   };
 
-  //전번
+  //가게명
+  const handleStoreName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setForm((prev) => ({ ...prev, storeName: value }));
+  };
 
   //프로필 이미지
-  const uploadStoreProfile = useOwnerImg();
+  // const uploadStoreProfile = useOwnerImg();
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
+  //   const reader = new FileReader();
+  //   reader.onload = () => setPreview(reader.result as string);
+  //   reader.readAsDataURL(file);
 
-    const formData = new FormData();
-    formData.append("image", file);
-    await uploadStoreProfile.mutateAsync({
-      memberId: data?.id,
-      body: formData,
-    });
-  };
+  //   const formData = new FormData();
+  //   formData.append("image", file);
+  //   await uploadStoreProfile.mutateAsync({
+  //     memberId: data?.id,
+  //     body: formData,
+  //   });
+  // };
 
   const isValidPhone = (v: string) => phoneRegex.test(v);
   const isValidnickName = (v: string) => /^.{2,20}$/.test(v);
@@ -81,7 +102,7 @@ export default function ManagerEdit() {
         <label htmlFor="profile" className="relative cursor-pointer">
           <div className="relative flex items-center justify-center">
             <img
-              src={preview || data?.profileImageUrl || ImgUrl}
+              src={data?.profileImageUrl || ImgUrl}
               alt=""
               className="mt-6 size-28 rounded-full shrink-0"
             />
@@ -91,14 +112,16 @@ export default function ManagerEdit() {
               className="absolute right-0   bottom-0 size-9"
             />
           </div>
-          <input
+          {/* <input
             type="file"
             className="hidden"
             id="profile"
             accept="image/*"
             onChange={handleImageChange}
-          />
+          /> */}
         </label>
+
+        {/* 대표자명 */}
         <MyPageInputField
           className="w-full mb-6 mt-8"
           labelName="대표자명"
@@ -113,37 +136,73 @@ export default function ManagerEdit() {
               return;
             }
 
-            // handleProfile.mutate(
-            //   { phoneNumber: form.phone, ownerName: form.nickname },
-            //   {
-            //     onSuccess: () => {
-            //       setForm((pre) => ({ ...pre, nickname: "" }));
-            //     },
-            //   },
-            // );
-          }}
-        />
-        <MyPageInputField
-          className="w-full mb-6"
-          labelName="가게명"
-          value={form.nickname}
-          placeholder={data?.store.name}
-          onChangeClick={() => toggle("nickname")}
-          onChange={onChangeNickname}
-          isChange={open.nickname}
-          onChangeUser={() => {
-            if (!isValidnickName(form.nickname)) {
-              alert("2글자에서 20글자 사이로 입력해주세요");
-              return;
-            }
-            // handleNickName.mutate(form.nickname, {
-            //   onSuccess: () => {
-            //     setForm((pre) => ({ ...pre, nickname: "" }));
-            //   },
-            // });
+            handleProfile.mutate(
+              { phoneNumber: null, ownerName: form.nickname },
+              {
+                onSuccess: () => {
+                  setForm((pre) => ({ ...pre, nickname: "" }));
+                },
+              },
+            );
           }}
         />
 
+        {/* 가게명 */}
+        <MyPageInputField
+          className="w-full mb-6"
+          labelName="가게명"
+          value={form.storeName}
+          placeholder={data?.store.name}
+          onChangeClick={() => toggle("storeName")}
+          onChange={handleStoreName}
+          isChange={open.storeName}
+          onChangeUser={() => {
+            handleStore.mutate(
+              {
+                storeName: form.storeName,
+                storePhoneNumber: null,
+                roadAddress: null,
+                detailAddress: null,
+              },
+              {
+                onSuccess: () => {
+                  setForm((pre) => ({ ...pre, storeName: "" }));
+                },
+              },
+            );
+          }}
+        />
+        {/* 사업자등록번호 */}
+        <MyPageInputField
+          className="w-full mb-6"
+          labelName="사업자등록번호 "
+          placeholder={businessNum}
+          value={form.storePhoneNumber}
+          onChangeClick={() => toggle("storePhoneNumber")}
+          onChange={handleInputPhone}
+          isChange={open.storePhoneNumber}
+          onChangeUser={() => {
+            if (!isValidPhone(form.storePhoneNumber)) {
+              alert("유효한 전화번호를 입력해주세요");
+              return;
+            }
+
+            handleStore.mutate(
+              {
+                storeName: null,
+                storePhoneNumber: form.storePhoneNumber,
+                roadAddress: null,
+                detailAddress: null,
+              },
+              {
+                onSuccess: () => {
+                  setForm((pre) => ({ ...pre, storeName: "" }));
+                },
+              },
+            );
+          }}
+        />
+        {/* 전화번호 */}
         <MyPageInputField
           className="w-full mb-6"
           labelName="전화번호 "
@@ -162,7 +221,7 @@ export default function ManagerEdit() {
             }
 
             handleProfile.mutate(
-              { phoneNumber: form.phone },
+              { phoneNumber: form.phone, ownerName: null },
               {
                 onSuccess: () => {
                   setForm((pre) => ({ ...pre, phone: "" }));
