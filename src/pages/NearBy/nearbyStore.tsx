@@ -140,7 +140,7 @@ export default function NearbyStorePage({ id }: NearbyStorePageProps) {
     <div className="fixed inset-x-0 bottom-0 z-[1101] mx-auto w-full max-w-[401px]">
       <div
         className="bg-white rounded-t-2xl overflow-hidden"
-        style={{ height: "55vh" }}
+        style={{ height: "58vh" }}
       >
         <div
           className="sticky top-0 z-10  px-6 pt-3 pb-4 border-b border-grey-4 "

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { getMemberType, MemberType } from "@/utils/getUserInfo";
+import { getMemberType, MemberType } from "@/utils/getUserInfo"; // useState 임포트 제거
 import Home from "@/Home";
 import ManagerHome from "@/pages/ManagerHome/ManagerHome";
 
@@ -9,12 +8,7 @@ import ManagerHome from "@/pages/ManagerHome/ManagerHome";
  * - OWNER: ManagerHome 컴포넌트
  */
 const HomePage = () => {
-  const [memberType, setMemberType] = useState<MemberType | null>(null);
-
-  useEffect(() => {
-    const type = getMemberType();
-    setMemberType(type);
-  }, []);
+  const memberType: MemberType | null = getMemberType();
 
   // OWNER인 경우 ManagerHome 렌더링
   if (memberType === "OWNER") {

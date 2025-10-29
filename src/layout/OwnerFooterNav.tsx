@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import home from "@/assets/icons/home-line.svg";
 import homeActive from "@/assets/icons/home-line-active.svg";
@@ -7,22 +6,20 @@ import receiptActive from "@/assets/icons/receipt-active.svg";
 import mypage from "@/assets/icons/user.svg";
 import mypageActive from "@/assets/icons/user-active.svg";
 
+type ActiveTab = "home" | "orders" | "mypage"; // nearby 제거
+
 export default function OwnerFooterNav() {
   const navigate = useNavigate();
   const routerLocation = useLocation();
 
-  const [activeTab, setActiveTab] = useState<
-    "home" | "nearby" | "orders" | "mypage"
-  >("home");
+  const getActiveTab = (): ActiveTab => {
+    const pathname = routerLocation.pathname;
+    if (pathname.startsWith("/orders")) return "orders";
+    if (pathname.startsWith("/mypage")) return "mypage";
+    return "home";
+  };
 
-  useEffect(() => {
-    if (routerLocation.pathname.startsWith("/nearby")) setActiveTab("nearby");
-    else if (routerLocation.pathname.startsWith("/orders"))
-      setActiveTab("orders");
-    else if (routerLocation.pathname.startsWith("/mypage"))
-      setActiveTab("mypage");
-    else setActiveTab("home");
-  }, [routerLocation.pathname]);
+  const activeTab = getActiveTab();
 
   const navItems = [
     {
@@ -48,11 +45,7 @@ export default function OwnerFooterNav() {
     },
   ] as const;
 
-  const handleNavClick = (
-    id: (typeof navItems)[number]["id"],
-    path: string,
-  ) => {
-    setActiveTab(id);
+  const handleNavClick = (path: string) => {
     navigate(path);
   };
 
@@ -62,7 +55,7 @@ export default function OwnerFooterNav() {
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => handleNavClick(item.id, item.path)}
+            onClick={() => handleNavClick(item.path)} // path만 전달
             className="flex flex-col items-center text-[12px] font-medium text-[#7F7F7F] cursor-pointer w-[60px]"
           >
             <img

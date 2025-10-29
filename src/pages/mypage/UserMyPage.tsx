@@ -4,7 +4,7 @@ import FooterNav from "@/layout/FooterNav";
 import { useNavigate } from "react-router-dom";
 import { useMyProfile } from "@/api/mypage/mypage";
 
-export default function MyPage() {
+export default function UserMyPage() {
   const navigete = useNavigate();
 
   const { data } = useMyProfile();

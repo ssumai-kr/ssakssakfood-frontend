@@ -1,9 +1,14 @@
 //내 프로필 조회
 
 import api from "@/api/apiMember";
-import { UserLoginRequestDTO, UserPwRequestDTO } from "@/types/mypage";
+import {
+  OwnerProfileRequestDTO,
+  UserLoginRequestDTO,
+  UserPwRequestDTO,
+} from "@/types/mypage";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
+//사용자 내 프로필 조회
 export const getMyProfile = async () => {
   const { data } = await api.get("/users/me");
   return data;
@@ -12,6 +17,19 @@ export const useMyProfile = () => {
   return useQuery({
     queryFn: getMyProfile,
     queryKey: ["myProfile"],
+  });
+};
+
+//사장 내프로필 조회
+export const getOwnerProfile = async () => {
+  const { data } = await api.get("/owners/me");
+  return data;
+};
+export const useGetOwnerProfile = () => {
+  return useQuery({
+    queryFn: getOwnerProfile,
+    queryKey: ["ownerProfile"],
+    select: (res) => res.data,
   });
 };
 
@@ -126,3 +144,37 @@ export const useOwnerImg = () => {
     ownerImg(vars),
   );
 };
+
+//사장프로필 변경 (핸드폰만 변경함)
+export const patchOwnerProfile = async (body: OwnerProfileRequestDTO) => {
+  const { data } = await api.patch("/owners/me/profile", body);
+  return data;
+};
+
+export const usePatchOwnerProfile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: OwnerProfileRequestDTO) => patchOwnerProfile(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["myProfile"], //사장인데 ...일단은
+      });
+      console.log("성공");
+    },
+    onError: (err) => console.log(err),
+  });
+};
+
+//사장 메뉴 조회
+
+// export const getMyOwnerMenus = async (storeId: number) => {
+//   const { data } = await api.get(`/menus/stores/${storeId}/menus`);
+//   return data;
+// };
+// export const useMySoreMenus = (storeId: number) => {
+//   return useQuery({
+//     queryFn: () => getMyOwnerMenus(storeId),
+//     queryKey: ["menus"],
+//     select: (res) => res.result,
+//   });
+// };

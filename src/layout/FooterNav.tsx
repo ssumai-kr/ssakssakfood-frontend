@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+// components/FooterNav.tsx
 import { useNavigate, useLocation } from "react-router-dom";
+
 import home from "@/assets/icons/home-line.svg";
 import homeActive from "@/assets/icons/home-line-active.svg";
 import location from "@/assets/icons/location-nav.svg";
@@ -13,18 +14,16 @@ export default function FooterNav() {
   const navigate = useNavigate();
   const routerLocation = useLocation();
 
-  const [activeTab, setActiveTab] = useState<
-    "home" | "nearby" | "orders" | "mypage"
-  >("home");
+  type ActiveTab = "home" | "nearby" | "orders" | "mypage";
+  const getActiveTab = (): ActiveTab => {
+    const pathname = routerLocation.pathname;
+    if (pathname.startsWith("/nearby")) return "nearby";
+    if (pathname.startsWith("/orders")) return "orders";
+    if (pathname.startsWith("/mypage")) return "mypage";
+    return "home";
+  };
 
-  useEffect(() => {
-    if (routerLocation.pathname.startsWith("/nearby")) setActiveTab("nearby");
-    else if (routerLocation.pathname.startsWith("/orders"))
-      setActiveTab("orders");
-    else if (routerLocation.pathname.startsWith("/mypage"))
-      setActiveTab("mypage");
-    else setActiveTab("home");
-  }, [routerLocation.pathname]);
+  const activeTab = getActiveTab();
 
   const navItems = [
     { id: "home", label: "홈", icon: home, activeIcon: homeActive, path: "/" },
@@ -51,11 +50,7 @@ export default function FooterNav() {
     },
   ] as const;
 
-  const handleNavClick = (
-    id: (typeof navItems)[number]["id"],
-    path: string,
-  ) => {
-    setActiveTab(id);
+  const handleNavClick = (path: string) => {
     navigate(path);
   };
 
@@ -65,7 +60,7 @@ export default function FooterNav() {
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => handleNavClick(item.id, item.path)}
+            onClick={() => handleNavClick(item.path)} // id 대신 path만 전달
             className="flex flex-col items-center text-[12px] font-medium text-[#7F7F7F] cursor-pointer w-[60px]"
           >
             <img
