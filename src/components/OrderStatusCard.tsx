@@ -9,6 +9,7 @@ interface OrderStatusCardProps {
   reservedAt: string;
   pickupTime: string;
   status: string;
+  isShared: boolean;
 }
 
 //status가 "PENDING" 이면, "결제 대기 중"
@@ -64,6 +65,7 @@ export default function OrderStatusCard({
   reservedAt,
   pickupTime,
   status,
+  isShared,
 }: OrderStatusCardProps) {
   // 픽업 시간이 지났는지 확인
   const isPickupTimeExpired = new Date(pickupTime) < new Date();
@@ -98,8 +100,23 @@ export default function OrderStatusCard({
             수량<span>{foodQuantity}</span>
           </div>
           <div className="text-[14px] font-normal text-[#7F7F7F] flex gap-2 items-center">
-            결제금액<span>{totalAmount.toLocaleString()}원</span>
+            결제금액
+            {isShared ? (
+              <span className="flex gap-1 items-center">
+                <span className="line-through">
+                  {totalAmount.toLocaleString()}원
+                </span>
+                <span className="text-[#FE7549] font-bold">0원</span>
+              </span>
+            ) : (
+              <span>{totalAmount.toLocaleString()}원</span>
+            )}
           </div>
+          {isShared && (
+            <div className="text-[10px] text-[#FE7549] font-medium bg-[#FFF2ED] px-2 py-1 rounded w-fit">
+              급식 카드 사용
+            </div>
+          )}
         </div>
       </div>
       {(status === "PENDING" ||

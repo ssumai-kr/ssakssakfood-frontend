@@ -64,6 +64,7 @@ export default function UserOrdersPage() {
               reservedAt={reservation.reservedAt}
               pickupTime={reservation.pickupTime}
               status={reservation.status}
+              isShared={reservation.isShared}
             />
           ))}
         </div>

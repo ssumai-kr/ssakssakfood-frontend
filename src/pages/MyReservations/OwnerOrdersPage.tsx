@@ -31,7 +31,7 @@ export default function OwnerOrdersPage() {
     error,
   } = useGetStoreReservationsByDate(storeId, formattedDateForAPI);
 
-  // "삭제된 메뉴" 필터링 및 PENDING, CONFIRMED 상태만 표시, 픽업 시간이 지나지 않은 예약만 표시
+  // "삭제된 메뉴" 필터링 및 PENDING, CONFIRMED, COMPLETED 상태 표시, 픽업 시간이 지나지 않은 예약만 표시
   const filteredReservations = useMemo(() => {
     const now = new Date();
     return (
@@ -39,7 +39,8 @@ export default function OwnerOrdersPage() {
         (reservation) =>
           reservation.menuName !== "삭제된 메뉴" &&
           (reservation.status === "PENDING" ||
-            reservation.status === "CONFIRMED") &&
+            reservation.status === "CONFIRMED" ||
+            reservation.status === "COMPLETED") &&
           new Date(reservation.pickupTime) > now,
       ) || []
     );

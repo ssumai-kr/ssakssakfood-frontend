@@ -9,6 +9,7 @@ export type ReservationStatus =
 export interface CreateReservationDto {
   foodQuantity: number;
   pickupTime: string; // ISO 8601 format: "2025-10-23T15:30:00.000Z"
+  isShared: boolean; // 급식 카드 사용 여부
 }
 
 // 예약 응답 DTO
@@ -34,6 +35,7 @@ export interface MyReservationDto {
   reservedAt: string;
   pickupTime: string;
   status: ReservationStatus;
+  isShared: boolean; // 급식 카드 사용 여부
 }
 
 // 사장님 예약 목록 조회 (특정 날짜)
@@ -47,6 +49,7 @@ export interface OwnerReservationDto {
   status: ReservationStatus;
   customerName: string;
   customerPhone: string;
+  isShared?: boolean;
 }
 
 // API 응답 타입

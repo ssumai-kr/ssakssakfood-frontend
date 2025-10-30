@@ -105,7 +105,17 @@ export default function OwnerOrderStatusCard({
             {reservation.menuName}
           </div>
           <div className="text-[14px] font-normal text-[#7F7F7F] flex gap-2 items-center">
-            결제금액<span>{reservation.totalAmount.toLocaleString()}원</span>
+            결제금액
+            {reservation.isShared ? (
+              <span className="flex gap-1 items-center">
+                <span className="line-through">
+                  {reservation.totalAmount.toLocaleString()}원
+                </span>
+                <span className="text-[#FE7549] font-bold">0원</span>
+              </span>
+            ) : (
+              <span>{reservation.totalAmount.toLocaleString()}원</span>
+            )}
           </div>
         </div>
       </div>
@@ -121,21 +131,29 @@ export default function OwnerOrderStatusCard({
           </span>
         </div>
       </div>
-      <div className="flex gap-2 mt-3">
-        <Button
-          labelName="예약 취소"
-          className="flex-1 cursor-pointer"
-          disabled={false}
-          variant="secondary"
-          onClick={handleCancelClick}
-        />
-        <Button
-          labelName="예약 확정"
-          className="flex-[2] cursor-pointer"
-          disabled={false}
-          onClick={handleConfirmClick}
-        />
-      </div>
+      {reservation.status === "COMPLETED" ? (
+        <div className="mt-3 bg-[#E8F5E9] rounded-xl p-4 text-center">
+          <span className="text-[16px] font-bold text-[#2E7D32]">
+            확정된 주문
+          </span>
+        </div>
+      ) : (
+        <div className="flex gap-2 mt-3">
+          <Button
+            labelName="예약 취소"
+            className="flex-1 cursor-pointer"
+            disabled={false}
+            variant="secondary"
+            onClick={handleCancelClick}
+          />
+          <Button
+            labelName="예약 확정"
+            className="flex-[2] cursor-pointer"
+            disabled={false}
+            onClick={handleConfirmClick}
+          />
+        </div>
+      )}
 
       <ReservationConfirmModal
         isOpen={showCancelConfirm}

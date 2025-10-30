@@ -241,6 +241,7 @@ export default function ReservePage() {
       body: {
         foodQuantity: quantity,
         pickupTime: pickupDateTime,
+        isShared: useMealCard || false,
       },
     };
 
@@ -248,6 +249,7 @@ export default function ReservePage() {
     console.log("menuId:", requestData.menuId);
     console.log("foodQuantity:", requestData.body.foodQuantity);
     console.log("pickupTime:", requestData.body.pickupTime);
+    console.log("isShared:", requestData.body.isShared);
     console.log("전체 요청 body:", JSON.stringify(requestData.body, null, 2));
 
     // 예약 생성 API
