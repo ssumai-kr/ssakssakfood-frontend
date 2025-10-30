@@ -222,7 +222,7 @@ export default function NearbyPage() {
 
         <div className="flex">
           <div
-            className="ml-6 mr-2 flex rounded-4xl h-6  py-1 px-3 gap-2 pointer-events-auto"
+            className="ml-6 mr-2 flex rounded-4xl h-6  py-1 px-3 gap-2 pointer-events-auto shrink-0"
             style={{ background: "var(--color-gradient-main1)" }}
             onClick={handleModal}
           >
