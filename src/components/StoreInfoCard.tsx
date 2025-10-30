@@ -1,5 +1,5 @@
 import chevronRight from "@/assets/images/chevron-right.png";
-import basicImage from "@/assets/images/basic.svg";
+import basicImage from "@/assets/images/progile.png";
 import { useNavigate } from "react-router-dom";
 
 //가게 정보 카드 컴포넌트

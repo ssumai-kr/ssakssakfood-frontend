@@ -186,7 +186,12 @@ export function MenuAddCard({
       onClick={handleCardClick}
     >
       <div className="flex gap-4 items-center">
-        <img src={imgUrl || basicImage} alt="식품 추가 아이콘" width={80} />
+        <img
+          src={imgUrl || basicImage}
+          alt="식품 추가 아이콘"
+          width={80}
+          className="rounded-xl"
+        />
         <div className="flex flex-col gap-2">
           <div className="text-[18px] font-bold">{name}</div>
           <div className="flex flex-col text-[14px] font-normal text-[#7F7F7F]">

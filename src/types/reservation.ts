@@ -23,6 +23,32 @@ export interface ReservationDto {
   memberEmail: string;
 }
 
+// 내 예약 목록 조회
+export interface MyReservationDto {
+  reservationId: number;
+  menuName: string;
+  storeName: string;
+  menuImageUrl: string;
+  foodQuantity: number;
+  totalAmount: number;
+  reservedAt: string;
+  pickupTime: string;
+  status: ReservationStatus;
+}
+
+// 사장님 예약 목록 조회 (특정 날짜)
+export interface OwnerReservationDto {
+  reservationId: number;
+  menuName: string;
+  menuImageUrl: string;
+  foodQuantity: number;
+  totalAmount: number;
+  pickupTime: string;
+  status: ReservationStatus;
+  customerName: string;
+  customerPhone: string;
+}
+
 // API 응답 타입
 export interface ApiResponse<T> {
   isSuccess: boolean;

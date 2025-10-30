@@ -61,11 +61,33 @@ export default function ReservePage() {
   const createReservationMutation = useCreateReservation();
 
   // pickupTime 파싱 및 기본값 설정
-  const pickupTimeRange = state?.pickupTime?.match(
-    /(\d{2}):\d{2}\s*~\s*(\d{2}):\d{2}/,
-  );
-  const startHour = pickupTimeRange ? parseInt(pickupTimeRange[1], 10) : 9;
-  const endHour = pickupTimeRange ? parseInt(pickupTimeRange[2], 10) : 18;
+  // ISO 8601 형식 (예: 2025-10-31T23:50:00)에서 시간 추출
+  let startHour = 9;
+  let endHour = 18;
+
+  if (state?.pickupTime) {
+    // ISO 형식인 경우 Date 객체로 파싱
+    if (state.pickupTime.includes("T")) {
+      const pickupDate = new Date(state.pickupTime);
+      endHour = pickupDate.getHours();
+      // 시작 시간은 기본값 9시 사용 (또는 다른 로직 필요 시 수정)
+      startHour = 9;
+    } else {
+      // 기존 "HH:MM ~ HH:MM" 형식
+      const pickupTimeRange = state.pickupTime.match(
+        /(\d{2}):\d{2}\s*~\s*(\d{2}):\d{2}/,
+      );
+      if (pickupTimeRange) {
+        startHour = parseInt(pickupTimeRange[1], 10);
+        endHour = parseInt(pickupTimeRange[2], 10);
+      }
+    }
+  }
+
+  console.log("==== 픽업 가능 시간 정보 ====");
+  console.log("원본 pickupTime:", state?.pickupTime);
+  console.log("파싱된 시작 시간:", startHour);
+  console.log("파싱된 종료 시간:", endHour);
 
   // 모든 Hook 호출은 early return 전에 위치
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -73,59 +95,11 @@ export default function ReservePage() {
     dateItems[0].value as "today" | "tomorrow",
   );
 
-  // 오늘인 경우 현재 시간 이후만 선택 가능하도록
-  const currentHour = today.getHours();
-  const currentMinute = today.getMinutes();
-  const availableStartHour =
-    selectedDate === "today" ? Math.max(startHour, currentHour) : startHour;
-  const hourItems = generateTimeItems(availableStartHour, endHour);
+  // 모든 시간 선택 가능하도록 설정
+  const hourItems = generateTimeItems(0, 23);
 
-  const [selectedHour, setSelectedHour] = useState<number>(
-    (hourItems[0]?.value as number) || startHour,
-  );
-  const [selectedMinute, setSelectedMinute] = useState<number>(
-    (minuteItems[0]?.value as number) || 0,
-  );
-
-  // 오늘이고 현재 시간과 같은 시를 선택한 경우, 현재 분 이후만 선택 가능
-  const isCurrentHour =
-    selectedDate === "today" && selectedHour === currentHour;
-  const availableStartMinute = isCurrentHour
-    ? Math.ceil(currentMinute / MINUTE_STEP) * MINUTE_STEP
-    : 0;
-  const availableMinuteItems = generateTimeItems(
-    availableStartMinute,
-    59,
-    MINUTE_STEP,
-  );
-
-  // 날짜 변경 시 선택된 시간이 유효한지 확인하고 조정
-  useEffect(() => {
-    const currentHour = today.getHours();
-    const availableStartHour =
-      selectedDate === "today" ? Math.max(startHour, currentHour) : startHour;
-
-    // 선택된 시간이 유효 범위보다 작으면 최소값으로 설정
-    if (selectedHour < availableStartHour) {
-      setSelectedHour(availableStartHour);
-    }
-  }, [selectedDate, selectedHour, startHour]);
-
-  // 시간 변경 시 선택된 분이 유효한지 확인하고 조정
-  useEffect(() => {
-    const currentHour = today.getHours();
-    const currentMinute = today.getMinutes();
-    const isCurrentHour =
-      selectedDate === "today" && selectedHour === currentHour;
-
-    if (isCurrentHour) {
-      const availableStartMinute =
-        Math.ceil(currentMinute / MINUTE_STEP) * MINUTE_STEP;
-      if (selectedMinute < availableStartMinute) {
-        setSelectedMinute(availableStartMinute);
-      }
-    }
-  }, [selectedDate, selectedHour, selectedMinute]);
+  const [selectedHour, setSelectedHour] = useState<number>(startHour);
+  const [selectedMinute, setSelectedMinute] = useState<number>(0);
 
   // state가 없으면 메뉴 상세 페이지로 리다이렉트
   useEffect(() => {
@@ -230,6 +204,34 @@ export default function ReservePage() {
       alert("로그인이 필요합니다.");
       navigate("/login");
       return;
+    }
+
+    // 오늘 선택 시 유효성 검사
+    if (selectedDate === "today") {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      // 현재 시간보다 이전인지 확인
+      if (
+        selectedHour < currentHour ||
+        (selectedHour === currentHour && selectedMinute <= currentMinute)
+      ) {
+        alert("현재보다 이전 시간은 선택하실 수 없습니다!");
+        return;
+      }
+
+      // 픽업 가능 시간 범위 체크
+      if (selectedHour < startHour || selectedHour > endHour) {
+        alert("픽업 가능시간을 넘길 수 없습니다!");
+        return;
+      }
+    } else {
+      // 내일 선택 시 픽업 가능 시간 범위 체크
+      if (selectedHour < startHour || selectedHour > endHour) {
+        alert("픽업 가능시간을 넘길 수 없습니다!");
+        return;
+      }
     }
 
     const pickupDateTime = getPickupDateTime();
@@ -361,7 +363,7 @@ export default function ReservePage() {
                 unit="시"
               />
               <DialPicker
-                items={availableMinuteItems}
+                items={minuteItems}
                 selectedValue={selectedMinute}
                 onValueChange={(val) => setSelectedMinute(val as number)}
                 unit="분"

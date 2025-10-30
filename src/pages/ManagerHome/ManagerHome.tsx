@@ -14,7 +14,7 @@ import {
   useGetAllStoreMenus,
   useDeleteMenu,
 } from "@/api/menu/menu";
-import basicImage from "@/assets/images/basic.svg";
+import basicImage from "@/assets/images/progile.png";
 import { useQueryClient } from "react-query";
 
 export default function ManagerHome() {

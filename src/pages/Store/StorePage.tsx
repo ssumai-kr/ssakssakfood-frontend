@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { MenuHeader } from "@/components/Headers";
 import MenuCard from "@/components/MenuCard";
 import { useGetStoreMenus } from "@/api/menu/menu";
-import basicImage from "@/assets/images/basic.svg";
+import basicImage from "@/assets/images/progile.png";
 
 export default function StorePage() {
   const { id } = useParams<{ id: string }>();
