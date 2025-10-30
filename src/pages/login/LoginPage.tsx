@@ -14,14 +14,26 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
   const userLoginForm = useUserLogin();
-  const { reset } = useOnboardingState();
+  const { reset: onboardingReset } = useOnboardingState();
   useEffect(() => {
-    reset();
-  }, [reset]);
+    onboardingReset();
+  }, [onboardingReset]);
+
+  const { register, watch, reset } = useForm({
+    defaultValues: {
+      login: "chamcham",
+      password: "Qwer123!",
+    },
+  });
+  useEffect(() => {
+    reset(
+      manager
+        ? { login: "chamcham", password: "Qwer123!" } // 사장님 프리셋
+        : { login: "qwer1234", password: "qwer1234Q!" }, // 고객 프리셋
+    );
+  }, [manager, reset]);
 
   const revertManager = () => setManager(true);
-
-  const { register, watch } = useForm({});
 
   const handleLogin = () => {
     userLoginForm.mutate({

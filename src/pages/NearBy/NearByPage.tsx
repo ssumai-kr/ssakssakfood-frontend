@@ -227,7 +227,7 @@ export default function NearbyPage() {
             onClick={handleModal}
           >
             <img src={Route} alt="루트" />
-            <p className="body-r-14 text-white">루트</p>
+            <p className="body-r-14 text-white">내 루트</p>
           </div>
 
           {selectedRoute && (
