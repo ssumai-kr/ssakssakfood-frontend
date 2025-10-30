@@ -128,6 +128,7 @@ export default function CategoryPage() {
               discountRate={menu.discountRate}
               stockCount={menu.surplusQuantity}
               isShared={menu.shared}
+              imageUrl={menu.imageUrl}
             />
           ))}
         </div>

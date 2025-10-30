@@ -18,3 +18,10 @@ export type OwnerStoreRequestDTO = {
   roadAddress?: string | null;
   detailAddress?: string | null;
 };
+
+export interface OwnerProfileDto {
+  storeName: string;
+  imageUrl: string;
+  roadAddress: string;
+  storeId: number;
+}

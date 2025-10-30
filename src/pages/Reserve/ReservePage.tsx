@@ -60,14 +60,14 @@ export default function ReservePage() {
   const state = location.state as ReserveState | null;
   const createReservationMutation = useCreateReservation();
 
+  // pickupTime 파싱 및 기본값 설정
   const pickupTimeRange = state?.pickupTime?.match(
     /(\d{2}):\d{2}\s*~\s*(\d{2}):\d{2}/,
   );
-
-  // 파싱 실패시 기본값
   const startHour = pickupTimeRange ? parseInt(pickupTimeRange[1], 10) : 9;
   const endHour = pickupTimeRange ? parseInt(pickupTimeRange[2], 10) : 18;
 
+  // 모든 Hook 호출은 early return 전에 위치
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<"today" | "tomorrow">(
     dateItems[0].value as "today" | "tomorrow",
@@ -81,10 +81,10 @@ export default function ReservePage() {
   const hourItems = generateTimeItems(availableStartHour, endHour);
 
   const [selectedHour, setSelectedHour] = useState<number>(
-    hourItems[0].value as number,
+    (hourItems[0]?.value as number) || startHour,
   );
   const [selectedMinute, setSelectedMinute] = useState<number>(
-    minuteItems[0].value as number,
+    (minuteItems[0]?.value as number) || 0,
   );
 
   // 오늘이고 현재 시간과 같은 시를 선택한 경우, 현재 분 이후만 선택 가능
@@ -98,12 +98,6 @@ export default function ReservePage() {
     59,
     MINUTE_STEP,
   );
-
-  useEffect(() => {
-    if (!state || !state.quantity) {
-      navigate(`/menu/${id}`, { replace: true });
-    }
-  }, [state, id, navigate]);
 
   // 날짜 변경 시 선택된 시간이 유효한지 확인하고 조정
   useEffect(() => {
@@ -132,6 +126,18 @@ export default function ReservePage() {
       }
     }
   }, [selectedDate, selectedHour, selectedMinute]);
+
+  // state가 없으면 메뉴 상세 페이지로 리다이렉트
+  useEffect(() => {
+    if (!state || !state.quantity) {
+      navigate(`/menu/${id}`, { replace: true });
+    }
+  }, [state, id, navigate]);
+
+  // state가 없으면 렌더링하지 않음
+  if (!state || !state.quantity) {
+    return null;
+  }
 
   if (!state) {
     return null;
@@ -246,12 +252,19 @@ export default function ReservePage() {
     createReservationMutation.mutate(requestData, {
       onSuccess: (reservationData) => {
         console.log("예약 생성 성공:", reservationData);
-        //예약 생성 성공 시 결제
-        handlePayment(
-          reservationData.reservationId,
-          reservationData.totalAmount,
-          reservationData.memberEmail,
-        );
+
+        // 급식 카드 사용 시 결제 건너뛰고 바로 완료 처리
+        if (useMealCard) {
+          alert("예약이 완료되었습니다!");
+          navigate("/");
+        } else {
+          // 일반 결제 진행
+          handlePayment(
+            reservationData.reservationId,
+            reservationData.totalAmount,
+            reservationData.memberEmail,
+          );
+        }
       },
       onError: (error: unknown) => {
         console.error("==== 예약 생성 실패 ====");
@@ -364,10 +377,12 @@ export default function ReservePage() {
             {totalPrice.toLocaleString()} 원
           </span>
         </div>
-        <div className="text-[14px] text-[#7f7f7f]">
-          * 급식 카드 사용 <br />
-          무료 아동 급식카드는 월 3회에 한해 사용 가능합니다.
-        </div>
+        {useMealCard && (
+          <div className="text-[14px] text-[#7f7f7f]">
+            * 급식 카드 사용 <br />
+            무료 아동 급식카드는 월 3회에 한해 사용 가능합니다.
+          </div>
+        )}
       </div>
       <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[401px] bg-white border-t border-gray-100 z-50">
         <div className="p-4">

@@ -75,3 +75,19 @@ export const CATEGORY: CategoryItem[] = [
     icon: categorySsakssakstore,
   },
 ];
+
+// 카테고리 slug를 categoryId로 변환
+// API 명세: 1=빵/디저트, 2=도시락/반찬, 3=식자재, 4=식당/조리, 5=시장, 6=편의점
+export const getCategoryId = (slug: CategorySlugType): number => {
+  const mapping: Record<CategorySlugType, number> = {
+    breads: 1,
+    packedmeal: 2,
+    ingredients: 3,
+    restaurant: 4,
+    market: 5,
+    convenience: 6,
+    sharing: 7,
+    ssakssakstore: 8,
+  };
+  return mapping[slug] || 1;
+};

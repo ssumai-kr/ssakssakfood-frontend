@@ -1,139 +1,412 @@
-// AddfoodEditPage.tsx
-import chevronLeft from "@/assets/icons/floating-checvron-left.svg";
-import Button from "@/components/Button";
-import { useParams, useNavigate } from "react-router-dom";
-import { ADDEDMENUS } from "@/Mock/ownerdatas";
-import StartSaleBottomSheet from "./UI/StartSaleBottomSheet";
+import { CategoryMiniBadge } from "@/components/CategoryBadge";
+import { MenuHeader } from "@/components/Headers";
+import ImagePickerBox from "@/components/ImagePickerBox";
+import InputField2 from "@/components/InputField2";
+import {
+  CATEGORY,
+  getCategoryId,
+  type CategorySlugType,
+} from "@/constants/Category";
 import { useState } from "react";
-import Modal from "@/components/onBoarding/Modal";
+import { useLocation } from "react-router-dom";
+import cornorImg from "@/assets/icons/corner-down-right.svg";
+import { useUpdateMenu, useUploadMenuImage } from "@/api/menu/menu";
+import { useQueryClient } from "react-query";
 
-export default function AddfoodEditPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [quantity, setQuantity] = useState<number>(1);
-  const [modal, setModal] = useState(false);
+interface MenuState {
+  id: number;
+  name: string;
+  originalPrice: number;
+  salePrice: number;
+  imgUrl: string;
+  category?: string;
+}
 
-  // id로 해당 메뉴 찾기
-  const menu = ADDEDMENUS.find((item) => item.id === Number(id));
+export default function AddFoodEditPage() {
+  const location = useLocation();
+  const menuData = location.state as MenuState | null;
+  const queryClient = useQueryClient();
 
-  const handleStartSaleButton = () => {
-    setIsSheetOpen(true);
+  // API hooks
+  const updateMenuMutation = useUpdateMenu();
+  const uploadImageMutation = useUploadMenuImage();
+
+  // 기존 데이터 (location state에서 받아온 데이터로 초기화)
+  const [foodName, setFoodName] = useState<string>(menuData?.name || "");
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    // category 이름을 slug로 변환 (예: "빵/디저트" -> "breads")
+    CATEGORY.find((cat) => cat.label === menuData?.category)?.slug || "breads",
+  );
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  console.log(imageFile);
+
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
+    menuData?.imgUrl || "",
+  );
+  const [costPrice, setCostPrice] = useState<string>(
+    menuData?.originalPrice.toString() || "",
+  );
+  const [sellingPrice, setSellingPrice] = useState<string>(
+    menuData?.salePrice.toString() || "",
+  );
+
+  // 수정 중인 임시 데이터
+  const [editingFoodName, setEditingFoodName] = useState<string>("");
+  const [editingCategory, setEditingCategory] = useState<string>("");
+  const [editingImageFile, setEditingImageFile] = useState<File | null>(null);
+  const [editingImagePreviewUrl, setEditingImagePreviewUrl] =
+    useState<string>("");
+  const [editingCostPrice, setEditingCostPrice] = useState<string>("");
+  const [editingSellingPrice, setEditingSellingPrice] = useState<string>("");
+
+  // 각 필드의 수정 모드 상태
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingCategoryField, setIsEditingCategoryField] = useState(false);
+  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [isEditingCost, setIsEditingCost] = useState(false);
+  const [isEditingSelling, setIsEditingSelling] = useState(false);
+
+  // 변경 버튼 핸들러
+  const handleEditName = () => {
+    setEditingFoodName(foodName);
+    setIsEditingName(true);
   };
 
-  const handleConfirmSale = () => {
-    setIsSheetOpen(false);
-    setTimeout(() => {
-      setModal(true);
-    }, 300);
+  const handleEditCategory = () => {
+    setEditingCategory(selectedCategory);
+    setIsEditingCategoryField(true);
   };
 
-  const closeModal = () => {
-    setModal(false);
-    navigate(-1);
+  const handleEditImage = () => {
+    setIsEditingImage(true);
   };
 
-  // 메뉴를 찾지 못한 경우 처리
-  if (!menu) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <p className="text-[18px] font-bold">식품을 찾을 수 없습니다.</p>
-          <button
-            onClick={() => navigate(-1)}
-            className="mt-4 px-4 py-2 bg-[#FE7549] text-white rounded-lg"
-          >
-            돌아가기
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleEditCost = () => {
+    setEditingCostPrice(costPrice);
+    setIsEditingCost(true);
+  };
+
+  const handleEditSelling = () => {
+    setEditingSellingPrice(sellingPrice);
+    setIsEditingSelling(true);
+  };
+
+  // 변경 완료 버튼 핸들러
+  const handleSaveName = async () => {
+    if (!editingFoodName.trim() || !menuData) return;
+
+    try {
+      await updateMenuMutation.mutateAsync({
+        menuId: menuData.id,
+        body: { name: editingFoodName },
+      });
+      setFoodName(editingFoodName);
+      setIsEditingName(false);
+
+      // 캐시 무효화로 목록 자동 새로고침
+      queryClient.invalidateQueries(["allStoreMenus"]);
+      queryClient.invalidateQueries(["todayMenus"]);
+    } catch (error) {
+      console.error("식품 이름 수정 실패:", error);
+      alert("식품 이름 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSaveCategory = async () => {
+    if (!editingCategory || !menuData) return;
+
+    try {
+      const categoryId = getCategoryId(editingCategory as CategorySlugType);
+      await updateMenuMutation.mutateAsync({
+        menuId: menuData.id,
+        body: { categoryId },
+      });
+      setSelectedCategory(editingCategory);
+      setIsEditingCategoryField(false);
+
+      // 캐시 무효화로 목록 자동 새로고침
+      queryClient.invalidateQueries(["allStoreMenus"]);
+      queryClient.invalidateQueries(["todayMenus"]);
+    } catch (error) {
+      console.error("카테고리 수정 실패:", error);
+      alert("카테고리 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSaveImage = async () => {
+    if (!editingImageFile || !editingImagePreviewUrl || !menuData) return;
+
+    try {
+      // 이미지 업로드 API 호출
+      await uploadImageMutation.mutateAsync({
+        menuId: menuData.id,
+        imageFile: editingImageFile,
+      });
+      setImageFile(editingImageFile);
+      setImagePreviewUrl(editingImagePreviewUrl);
+      setIsEditingImage(false);
+
+      // 캐시 무효화로 목록 자동 새로고침
+      queryClient.invalidateQueries(["allStoreMenus"]);
+      queryClient.invalidateQueries(["todayMenus"]);
+    } catch (error) {
+      console.error("이미지 수정 실패:", error);
+      alert("이미지 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSaveCost = async () => {
+    if (!editingCostPrice.trim() || !menuData) return;
+
+    try {
+      await updateMenuMutation.mutateAsync({
+        menuId: menuData.id,
+        body: { originalPrice: parseInt(editingCostPrice) },
+      });
+      setCostPrice(editingCostPrice);
+      setIsEditingCost(false);
+
+      // 캐시 무효화로 목록 자동 새로고침
+      queryClient.invalidateQueries(["allStoreMenus"]);
+      queryClient.invalidateQueries(["todayMenus"]);
+    } catch (error) {
+      console.error("원가 수정 실패:", error);
+      alert("원가 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSaveSelling = async () => {
+    if (!editingSellingPrice.trim() || !menuData) return;
+
+    try {
+      await updateMenuMutation.mutateAsync({
+        menuId: menuData.id,
+        body: { discountPrice: parseInt(editingSellingPrice) },
+      });
+      setSellingPrice(editingSellingPrice);
+      setIsEditingSelling(false);
+
+      // 캐시 무효화로 목록 자동 새로고침
+      queryClient.invalidateQueries(["allStoreMenus"]);
+      queryClient.invalidateQueries(["todayMenus"]);
+    } catch (error) {
+      console.error("판매가 수정 실패:", error);
+      alert("판매가 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
 
   return (
-    <div className="relative w-full max-w-[401px] mx-auto">
-      <div
-        className="absolute top-6 left-3 z-20"
-        onClick={() => window.history.back()}
-      >
-        <img
-          src={chevronLeft}
-          alt="뒤로가기"
-          className="cursor-pointer fixed"
+    <div className="flex flex-col gap-6">
+      <MenuHeader title="식품 정보 수정" />
+      {/* 식품 이름 */}
+      <div className="flex flex-col gap-2 justify-center relative">
+        <div className="text-[16px] font-bold">식품 이름</div>
+        <InputField2
+          placeholder="상품 이름 입력"
+          value={foodName}
+          disabled={true}
         />
-      </div>
-      <div>
-        <div className="w-full h-[240px] bg-gray-400 text-center flex items-center justify-center text-white">
-          이미지 자리
-        </div>
-        <div className="px-6 pb-[100px] flex flex-col gap-[24px]">
-          <div className="flex justify-between items-center mt-[24px]">
-            <span className="text-[24px] font-bold">{menu.name}</span>
-            <div className="w-[50px] h-[24px] bg-[#F3F3F3] rounded-md flex items-center justify-center cursor-pointer text-[14px]">
-              수정
-            </div>
-          </div>
-          <div className="flex flex-col gap-[12px]">
-            <div className="text-[14px] font-semibold text-[#A8A8A8]">
-              카테고리
-            </div>
-            <div className="text-[16px] font-semibold">{menu.categoryName}</div>
-          </div>
-          <div className="flex flex-col gap-[12px]">
-            <div className="text-[14px] font-semibold text-[#A8A8A8]">가격</div>
-            <div className="flex gap-6 text-[16px] text-[#7F7F7F] font-semibold">
-              <div className="flex justify-center items-center gap-3">
-                원가
-                <span className="text-[20px] font-bold text-black">
-                  {menu.originalPrice.toLocaleString()}원
-                </span>
-              </div>
-              <div className="flex justify-center items-center gap-3">
-                판매가
-                <span className="text-[20px] font-bold text-black">
-                  {menu.discountPrice.toLocaleString()}원
-                </span>
-              </div>
-            </div>
-          </div>
+        <div
+          className="text-orange-500 absolute top-11 right-4 cursor-pointer"
+          onClick={
+            isEditingName ? () => setIsEditingName(false) : handleEditName
+          }
+        >
+          {isEditingName ? "변경 취소" : "변경"}
         </div>
       </div>
-
-      {/* 바텀시트가 열려있지 않을 때만 버튼 표시 */}
-      {!isSheetOpen && (
-        <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[401px] bg-white border-t border-gray-100 z-50">
-          <div className="p-4">
-            <Button
-              className="w-full text-lg py-6 cursor-pointer"
-              labelName="판매 시작하기"
-              disabled={false}
-              onClick={handleStartSaleButton}
+      {isEditingName && (
+        <div className="flex gap-4 relative">
+          <img src={cornorImg} alt="변경" />
+          <div className="flex flex-col gap-2 w-full">
+            <div className="text-[16px] font-bold">변경할 이름</div>
+            <InputField2
+              placeholder="변경할 이름 입력"
+              inputClassName="pr-[80px]"
+              value={editingFoodName}
+              onChange={(e) => setEditingFoodName(e.target.value)}
             />
           </div>
-        </footer>
-      )}
-
-      <StartSaleBottomSheet
-        isOpen={isSheetOpen}
-        onClose={() => setIsSheetOpen(false)}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        onConfirm={handleConfirmSale}
-      />
-
-      {modal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/50"
-            onClick={closeModal}
-          ></div>
-          <div className="relative z-[101] w-full">
-            <Modal
-              closeModal={closeModal}
-              title="식품이 판매 시작되었어요!"
-              subTitle="판매되고 있는 식품은 오늘의 판매 식품에서
-확인하실 수 있어요"
+            className="text-orange-500 absolute top-11 right-4 cursor-pointer text-[16px]"
+            onClick={handleSaveName}
+          >
+            변경 완료
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col relative">
+        <div className="text-[16px] font-bold">카테고리</div>
+        <div className="text-[14px] font-[500] text-[#A8A8A8] mt-2">
+          카테고리는 1개만 선택 가능해요.
+        </div>
+        <div className="flex flex-wrap gap-2 max-w-[75%] mt-4">
+          {CATEGORY.slice(0, -2).map((category) => (
+            <CategoryMiniBadge
+              key={category.slug}
+              label={category.label}
+              active={selectedCategory === category.slug}
+              onClick={() => {}}
             />
+          ))}
+        </div>
+        <div
+          className="text-orange-500 absolute top-0 right-0 cursor-pointer bg-[#F3F3F3] px-[16px] py-[6px] rounded-md"
+          onClick={
+            isEditingCategoryField
+              ? () => setIsEditingCategoryField(false)
+              : handleEditCategory
+          }
+        >
+          {isEditingCategoryField ? "변경 취소" : "변경"}
+        </div>
+      </div>
+      {isEditingCategoryField && (
+        <div className="flex gap-4 relative">
+          <img src={cornorImg} alt="변경" />
+          <div className="flex flex-col w-full">
+            <div className="text-[16px] font-bold">변경할 카테고리</div>
+            <div className="text-[14px] font-[500] text-[#A8A8A8]">
+              카테고리는 1개만 선택 가능해요.
+            </div>
+            <div className="flex flex-wrap gap-2 max-w-[80%] mt-4">
+              {CATEGORY.slice(0, -2).map((category) => (
+                <CategoryMiniBadge
+                  key={category.slug}
+                  label={category.label}
+                  active={editingCategory === category.slug}
+                  onClick={() => setEditingCategory(category.slug)}
+                />
+              ))}
+            </div>
+          </div>
+          <div
+            className="text-orange-500 absolute top-0 right-0 cursor-pointer text-[16px] bg-[#F3F3F3] px-[12px] py-[6px] rounded-md"
+            onClick={handleSaveCategory}
+          >
+            변경 완료
+          </div>
+        </div>
+      )}
+      <div className="relative">
+        <div className="text-[16px] font-bold">사진 첨부</div>
+        <div className="text-[14px] font-[500] text-[#A8A8A8] mt-2">
+          사진은 1개만 첨부 가능해요.
+        </div>
+        <ImagePickerBox
+          boxClass="w-[160px] h-[160px]"
+          className="mt-[16px]"
+          onChange={() => {}}
+          disabled
+          previewUrl={imagePreviewUrl}
+        />
+        <div
+          className="text-orange-500 absolute top-0 right-0 cursor-pointer bg-[#F3F3F3] px-[16px] py-[6px] rounded-md"
+          onClick={
+            isEditingImage ? () => setIsEditingImage(false) : handleEditImage
+          }
+        >
+          {isEditingImage ? "변경 취소" : "변경"}
+        </div>
+      </div>
+      {isEditingImage && (
+        <div className="flex gap-4 relative">
+          <img src={cornorImg} alt="변경" />
+          <div className="flex flex-col w-full">
+            <div className="text-[16px] font-bold">변경할 사진</div>
+            <div className="text-[14px] font-[500] text-[#A8A8A8]">
+              사진은 1개만 첨부 가능해요.
+            </div>
+            <ImagePickerBox
+              boxClass="w-[160px] h-[160px]"
+              className="mt-[16px]"
+              onChange={(file, previewUrl) => {
+                setEditingImageFile(file);
+                setEditingImagePreviewUrl(previewUrl);
+              }}
+            />
+          </div>
+          <div
+            className="text-orange-500 absolute top-0 right-0 cursor-pointer text-[16px] bg-[#F3F3F3] px-[12px] py-[6px] rounded-md"
+            onClick={handleSaveImage}
+          >
+            변경 완료
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col gap-2 justify-center relative">
+        <div className="text-[16px] font-bold">원가</div>
+        <InputField2
+          placeholder="상품 이름 입력"
+          value={costPrice}
+          disabled={true}
+        />
+        <div
+          className="text-orange-500 absolute top-11 right-4 cursor-pointer"
+          onClick={
+            isEditingCost ? () => setIsEditingCost(false) : handleEditCost
+          }
+        >
+          {isEditingCost ? "변경 취소" : "변경"}
+        </div>
+      </div>
+      {isEditingCost && (
+        <div className="flex gap-4 relative">
+          <img src={cornorImg} alt="변경" />
+          <div className="flex flex-col gap-2 w-full">
+            <div className="text-[16px] font-bold">변경할 가격</div>
+            <InputField2
+              placeholder="변경할 가격 입력"
+              inputClassName="pr-[80px]"
+              type="number"
+              value={editingCostPrice}
+              onChange={(e) => setEditingCostPrice(e.target.value)}
+            />
+          </div>
+          <div
+            className="text-orange-500 absolute top-11 right-4 cursor-pointer text-[16px]"
+            onClick={handleSaveCost}
+          >
+            변경 완료
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col gap-2 justify-center relative">
+        <div className="text-[16px] font-bold">판매가</div>
+        <InputField2
+          placeholder="상품 이름 입력"
+          value={sellingPrice}
+          disabled={true}
+        />
+        <div
+          className="text-orange-500 absolute top-11 right-4 cursor-pointer"
+          onClick={
+            isEditingSelling
+              ? () => setIsEditingSelling(false)
+              : handleEditSelling
+          }
+        >
+          {isEditingSelling ? "변경 취소" : "변경"}
+        </div>
+      </div>
+      {isEditingSelling && (
+        <div className="flex gap-4 relative">
+          <img src={cornorImg} alt="변경" />
+          <div className="flex flex-col gap-2 w-full">
+            <div className="text-[16px] font-bold">변경할 가격</div>
+            <InputField2
+              placeholder="변경할 가격 입력"
+              inputClassName="pr-[80px]"
+              type="number"
+              value={editingSellingPrice}
+              onChange={(e) => setEditingSellingPrice(e.target.value)}
+            />
+          </div>
+          <div
+            className="text-orange-500 absolute top-11 right-4 cursor-pointer text-[16px]"
+            onClick={handleSaveSelling}
+          >
+            변경 완료
           </div>
         </div>
       )}

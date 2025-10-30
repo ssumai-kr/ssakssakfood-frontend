@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import api from "../apiMember";
 import type {
   ApiResponse,
@@ -7,6 +7,13 @@ import type {
   MenuSearchParams,
   StoreMenusDto,
   StoreDetailMenuDto,
+  TodayMenusDto,
+  AllMenusDto,
+  CreateMenuDto,
+  CreateMenuResponseDto,
+  ImageUploadResponseDto,
+  UploadTodayMenuDto,
+  UpdateMenuDto,
 } from "@/types/menu";
 
 /*
@@ -176,5 +183,158 @@ export const useGetStoreDetailMenus = (storeId: string) => {
     queryKey: ["storeDetailMenus", storeId],
     queryFn: () => getStoreDetailMenus(storeId),
     enabled: !!storeId,
+  });
+};
+
+/*
+가게(storeId)의 오늘 판매 중인 등록식품 목록을 조회합니다.
+정렬 기준: 판매중 메뉴 → 마감기한 빠른 순 → 잉여수량 많은 순
+판매완료 메뉴는 후순위로 배치
+ */
+export const getTodayMenus = async (
+  storeId: number,
+): Promise<TodayMenusDto> => {
+  const { data } = await api.get<ApiResponse<TodayMenusDto>>(
+    `/menus/stores/${storeId}/menus/today`,
+  );
+  return data.result;
+};
+
+export const useGetTodayMenus = (storeId: number) => {
+  return useQuery({
+    queryKey: ["todayMenus", storeId],
+    queryFn: () => getTodayMenus(storeId),
+    enabled: !!storeId,
+  });
+};
+
+/*
+가게(storeId)의 전체 메뉴를 조회합니다.
+정렬: 등록 순서 기준
+ */
+export const getAllStoreMenus = async (
+  storeId: number,
+): Promise<AllMenusDto> => {
+  const { data } = await api.get<ApiResponse<AllMenusDto>>(
+    `/menus/stores/${storeId}/menus`,
+  );
+  return data.result;
+};
+
+export const useGetAllStoreMenus = (storeId: number) => {
+  return useQuery({
+    queryKey: ["allStoreMenus", storeId],
+    queryFn: () => getAllStoreMenus(storeId),
+    enabled: !!storeId,
+  });
+};
+
+/*
+사장님이 자신의 가게에 새로운 메뉴를 등록합니다.
+ */
+export const createMenu = async (
+  body: CreateMenuDto,
+): Promise<CreateMenuResponseDto> => {
+  const { data } = await api.post<ApiResponse<CreateMenuResponseDto>>(
+    "/menus",
+    body,
+  );
+  return data.result;
+};
+
+export const useCreateMenu = () => {
+  return useMutation({
+    mutationFn: (body: CreateMenuDto) => createMenu(body),
+  });
+};
+
+/*
+특정 메뉴에 이미지를 업로드합니다.
+ */
+export const uploadMenuImage = async (
+  menuId: number,
+  imageFile: File,
+): Promise<ImageUploadResponseDto> => {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  const { data } = await api.post<ApiResponse<ImageUploadResponseDto>>(
+    `/images/menus/${menuId}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return data.result;
+};
+
+export const useUploadMenuImage = () => {
+  return useMutation({
+    mutationFn: ({ menuId, imageFile }: { menuId: number; imageFile: File }) =>
+      uploadMenuImage(menuId, imageFile),
+  });
+};
+
+/*
+이미 등록된 메뉴를 오늘의 등록식품으로 전환합니다.
+ */
+export const uploadTodayMenu = async (
+  menuId: number,
+  body: UploadTodayMenuDto,
+): Promise<MenuDto> => {
+  const { data } = await api.patch<ApiResponse<MenuDto>>(
+    `/menus/${menuId}/upload-today`,
+    body,
+  );
+  return data.result;
+};
+
+export const useUploadTodayMenu = () => {
+  return useMutation({
+    mutationFn: ({
+      menuId,
+      body,
+    }: {
+      menuId: number;
+      body: UploadTodayMenuDto;
+    }) => uploadTodayMenu(menuId, body),
+  });
+};
+
+/*
+특정 메뉴를 삭제합니다.
+ */
+export const deleteMenu = async (menuId: number): Promise<string> => {
+  const { data } = await api.delete<ApiResponse<string>>(`/menus/${menuId}`);
+  return data.result;
+};
+
+export const useDeleteMenu = () => {
+  return useMutation({
+    mutationFn: (menuId: number) => deleteMenu(menuId),
+  });
+};
+
+/*
+메뉴의 기본 정보를 수정합니다.
+수정할 필드만 보내면 됩니다.
+ */
+export const updateMenu = async (
+  menuId: number,
+  body: UpdateMenuDto,
+): Promise<MenuDto> => {
+  const { data } = await api.patch<ApiResponse<MenuDto>>(
+    `/menus/${menuId}`,
+    body,
+  );
+  return data.result;
+};
+
+export const useUpdateMenu = () => {
+  return useMutation({
+    mutationFn: ({ menuId, body }: { menuId: number; body: UpdateMenuDto }) =>
+      updateMenu(menuId, body),
   });
 };

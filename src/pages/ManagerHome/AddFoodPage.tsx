@@ -4,9 +4,14 @@ import { MenuHeader } from "@/components/Headers";
 import ImagePickerBox from "@/components/ImagePickerBox";
 import InputField2 from "@/components/InputField2";
 import Modal from "@/components/onBoarding/Modal";
-import { CATEGORY } from "@/constants/Category";
+import {
+  CATEGORY,
+  getCategoryId,
+  CategorySlugType,
+} from "@/constants/Category";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCreateMenu, useUploadMenuImage } from "@/api/menu/menu";
 
 export default function AddFoodPage() {
   const navigate = useNavigate();
@@ -16,6 +21,10 @@ export default function AddFoodPage() {
   const [costPrice, setCostPrice] = useState<string>("");
   const [sellingPrice, setSellingPrice] = useState<string>("");
   const [modal, setModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const createMenuMutation = useCreateMenu();
+  const uploadImageMutation = useUploadMenuImage();
 
   // 모든 필드가 채워졌는지 확인
   const isFormValid =
@@ -25,9 +34,38 @@ export default function AddFoodPage() {
     costPrice.trim() !== "" &&
     sellingPrice.trim() !== "";
 
-  const handleAddFoodComplete = () => {
-    if (isFormValid) {
+  const handleAddFoodComplete = async () => {
+    if (!isFormValid || isLoading) return;
+
+    try {
+      setIsLoading(true);
+
+      // 1. 메뉴 등록
+      const categoryId = getCategoryId(selectedCategory as CategorySlugType);
+      const menuData = {
+        categoryId,
+        name: foodName,
+        originalPrice: parseInt(costPrice),
+        discountPrice: parseInt(sellingPrice),
+      };
+
+      const createdMenu = await createMenuMutation.mutateAsync(menuData);
+
+      // 2. 이미지 업로드
+      if (imageFile) {
+        await uploadImageMutation.mutateAsync({
+          menuId: createdMenu.id,
+          imageFile,
+        });
+      }
+
+      // 3. 모든 작업 완료 후 모달 표시
       setModal(true);
+    } catch (error) {
+      console.error("식품 추가 실패:", error);
+      alert("식품 추가에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,8 +141,8 @@ export default function AddFoodPage() {
         <div className="p-4">
           <Button
             className="w-full text-lg py-6 cursor-pointer"
-            labelName="식품 추가 완료하기"
-            disabled={!isFormValid}
+            labelName={isLoading ? "등록 중..." : "식품 추가 완료하기"}
+            disabled={!isFormValid || isLoading}
             onClick={handleAddFoodComplete}
           />
         </div>

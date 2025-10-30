@@ -8,6 +8,7 @@ import chevronLeft from "@/assets/icons/floating-checvron-left.svg";
 import OrderBottomSheet from "./UI/OrderBottomSheet";
 import { useGetMenuDetail } from "@/api/menu/menu";
 import { formatDeadline } from "@/utils/dateFormatter";
+import BasicImg from "@/assets/images/basic.svg";
 
 export default function MenuDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -101,7 +102,7 @@ export default function MenuDetailPage() {
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-white text-lg">이미지 없음</span>
+            <img src={BasicImg} alt="기본이미지" className="w-full" />
           )}
         </div>
 

@@ -1,4 +1,3 @@
-import mockImg from "@/assets/icons/bread.svg";
 import basicImage from "@/assets/images/basic.svg";
 import StockBadge from "./StockBadge";
 import { useNavigate } from "react-router-dom";
@@ -96,16 +95,18 @@ export function MenuImgCard({
   originalPrice,
   salePrice,
   name,
+  imageUrl,
 }: {
   originalPrice: number;
   salePrice: number;
   name: string;
+  imageUrl?: string;
 }) {
   return (
     <div className="relative w-[128px] h-[128px] flex-shrink-0">
       <img
-        src={mockImg}
-        alt="임시"
+        src={imageUrl || basicImage}
+        alt={name}
         className="w-full h-full object-cover rounded-[8px]"
       />
       <div
@@ -136,6 +137,8 @@ export function MenuAddCard({
   isEditMode,
   onDelete,
   onStartSale,
+  imgUrl,
+  category,
 }: {
   id: number;
   name: string;
@@ -144,12 +147,36 @@ export function MenuAddCard({
   isEditMode?: boolean;
   onDelete?: () => void;
   onStartSale?: (id: number) => void;
+  imgUrl: string;
+  category?: string;
 }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (!isEditMode) {
-      navigate(`/addfood/${id}`);
+    if (isEditMode) {
+      // 편집 모드: /addfood/:id/edit 로 이동
+      navigate(`/addfood/${id}/edit`, {
+        state: {
+          id,
+          name,
+          originalPrice,
+          salePrice,
+          imgUrl,
+          category,
+        },
+      });
+    } else {
+      // 일반 모드: /addfood/:id 로 이동
+      navigate(`/addfood/${id}`, {
+        state: {
+          id,
+          name,
+          originalPrice,
+          salePrice,
+          imgUrl,
+          category,
+        },
+      });
     }
   };
 
@@ -159,7 +186,7 @@ export function MenuAddCard({
       onClick={handleCardClick}
     >
       <div className="flex gap-4 items-center">
-        <img src={mockImg} alt="식품 추가 아이콘" width={80} />
+        <img src={imgUrl || basicImage} alt="식품 추가 아이콘" width={80} />
         <div className="flex flex-col gap-2">
           <div className="text-[18px] font-bold">{name}</div>
           <div className="flex flex-col text-[14px] font-normal text-[#7F7F7F]">
@@ -212,6 +239,7 @@ export function MenuTodayCard({
   stockCount,
   isShare,
   isSoldOut,
+  imageUrl,
 }: {
   name: string;
   originalPrice: number;
@@ -220,12 +248,17 @@ export function MenuTodayCard({
   stockCount: number;
   isShare?: boolean;
   isSoldOut?: boolean;
+  imageUrl?: string;
 }) {
   return (
     <div className="flex gap-[12px] items-center">
       {/* 이미지 영역 */}
       <div className="relative w-[114px] h-[114px] flex-shrink-0">
-        <img src={mockImg} alt="임시" className="w-full h-full rounded-[8px]" />
+        <img
+          src={imageUrl || basicImage}
+          alt={name}
+          className="w-full h-full rounded-[8px] object-cover"
+        />
         {isSoldOut && (
           <div className="absolute inset-0 bg-black opacity-50 rounded-[8px]" />
         )}

@@ -55,6 +55,7 @@ export default function SearchResultPage() {
               salePrice={menu.discountPrice}
               discountRate={menu.discountRate}
               stockCount={menu.surplusQuantity}
+              imageUrl={menu.imageUrl}
             />
           ))}
         </div>

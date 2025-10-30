@@ -102,6 +102,7 @@ const Home: React.FC = () => {
                 discountRate={menu.discountRate}
                 stockCount={menu.surplusQuantity}
                 isShared={menu.shared}
+                imageUrl={menu.imageUrl}
               />
             ))
           )}

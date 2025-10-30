@@ -9,6 +9,7 @@ type ImagePickerBoxProps = {
   accept?: string;
   className?: string;
   label?: string;
+  disabled?: boolean;
 };
 
 const ImagePickerBox = forwardRef<HTMLInputElement, ImagePickerBoxProps>(
@@ -21,6 +22,7 @@ const ImagePickerBox = forwardRef<HTMLInputElement, ImagePickerBoxProps>(
       accept = "image/*",
       className = "",
       label = "이미지 업로드",
+      disabled = false,
     },
     ref,
   ) => {
@@ -87,6 +89,7 @@ const ImagePickerBox = forwardRef<HTMLInputElement, ImagePickerBoxProps>(
           className="hidden"
           accept={accept}
           onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+          disabled={disabled}
         />
       </div>
     );
