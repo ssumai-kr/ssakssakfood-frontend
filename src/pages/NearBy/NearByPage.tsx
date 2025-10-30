@@ -220,9 +220,9 @@ export default function NearbyPage() {
           <SearchInput className="relative bg-white px-4 py-[10px] rounded-3xl w-full mb-2" />
         </div>
 
-        <div className="flex">
+        <div className="flex px-6">
           <div
-            className="ml-6 mr-2 flex rounded-4xl h-6  py-1 px-3 gap-2 pointer-events-auto shrink-0"
+            className="mr-2 flex rounded-4xl h-6  py-1 px-3 gap-2 pointer-events-auto shrink-0"
             style={{ background: "var(--color-gradient-main1)" }}
             onClick={handleModal}
           >
