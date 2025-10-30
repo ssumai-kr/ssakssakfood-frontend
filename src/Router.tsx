@@ -87,7 +87,7 @@ const router = createBrowserRouter([
       // { path: "/location/map", element: withAuthGuard(LocationMap) },
       { path: "/location/map", element: <LocationMap /> },
       //내주변
-      { path: "/nearby/register", element: <NearbyRegister /> },
+      { path: "/nearby/register", element: withAuthGuard(NearbyRegister) },
       { path: "/nearby/edit/:routeId", element: <NearbyEdit /> },
       //매장별 식품
       { path: "/store/:id", element: withAuthGuard(StorePage) },

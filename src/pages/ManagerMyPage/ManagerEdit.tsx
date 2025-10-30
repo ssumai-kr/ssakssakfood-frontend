@@ -25,9 +25,6 @@ export default function ManagerEdit() {
     storePhoneNumber: false,
   });
 
-  const businessNum = data?.store.businessRegistrationNumber
-    ? `${data.store.businessRegistrationNumber.slice(0, 3)}-${data.store.businessRegistrationNumber.slice(3, 5)}-${data.store.businessRegistrationNumber.slice(5, 10)}`
-    : "";
   const toggle = (k: FieldKey) =>
     setOpen((prev) => ({ ...prev, [k]: !prev[k] }));
 
@@ -172,36 +169,7 @@ export default function ManagerEdit() {
             );
           }}
         />
-        {/* 사업자등록번호 */}
-        <MyPageInputField
-          className="w-full mb-6"
-          labelName="사업자등록번호 "
-          placeholder={businessNum}
-          value={form.storePhoneNumber}
-          onChangeClick={() => toggle("storePhoneNumber")}
-          onChange={handleInputPhone}
-          isChange={open.storePhoneNumber}
-          onChangeUser={() => {
-            if (!isValidPhone(form.storePhoneNumber)) {
-              alert("유효한 전화번호를 입력해주세요");
-              return;
-            }
 
-            handleStore.mutate(
-              {
-                storeName: null,
-                storePhoneNumber: form.storePhoneNumber,
-                roadAddress: null,
-                detailAddress: null,
-              },
-              {
-                onSuccess: () => {
-                  setForm((pre) => ({ ...pre, storeName: "" }));
-                },
-              },
-            );
-          }}
-        />
         {/* 전화번호 */}
         <MyPageInputField
           className="w-full mb-6"

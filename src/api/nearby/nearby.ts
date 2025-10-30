@@ -120,11 +120,11 @@ export const useStoreMenus = (storeId: number | undefined) => {
   return useQuery({
     queryFn: () => getStoreMenus(storeId as number),
     queryKey: ["storeMenus", storeId],
-    keepPreviousData: false,
+    // keepPreviousData: false,
     enabled: typeof storeId === "number",
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
+    // refetchOnWindowFocus: false,
+    // refetchOnReconnect: false,
+    // refetchOnMount: false,
     select: (res) => res.result,
   });
 };

@@ -33,7 +33,7 @@ export default function StorePage() {
         </div>
 
         <div className="flex flex-col gap-[24px]">
-          {menus.length > 0 ? (
+          {menus?.length > 0 ? (
             menus.map((item) => (
               <MenuCard
                 key={item.id}

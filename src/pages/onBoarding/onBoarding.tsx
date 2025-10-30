@@ -20,7 +20,8 @@ export default function OnBoardingPage() {
   const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
       .slice(0, 20)
-      .replace(/[^가-힣a-zA-Z\s\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]/g, "");
+      .replace(/[^가-힣a-zA-Z\s\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]/g, "")
+      .trim();
     setNickname(value);
   };
 

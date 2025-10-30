@@ -3,16 +3,21 @@ import InputField from "../../components/InputField";
 import LogoImg from "@assets/images/logo.png";
 import Login from "@assets/images/login.png";
 import managerLogin from "@assets/images/manager-login.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserLogin } from "@/api/mamber/onboarding";
 import { useForm } from "react-hook-form";
+import { useOnboardingState } from "@/store/useOnboardingStore";
 export default function LoginPage() {
   const [manager, setManager] = useState<boolean>(false);
   const [pwChecked, setpwChecked] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const userLoginForm = useUserLogin();
+  const { reset } = useOnboardingState();
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   const revertManager = () => setManager(true);
 

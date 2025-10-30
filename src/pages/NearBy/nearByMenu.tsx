@@ -1,6 +1,6 @@
 import StockBadge from "@/components/StockBadge";
 import { useNavigate } from "react-router-dom";
-import mockImg from "@/assets/icons/bread.svg";
+import mockImg from "@/assets/images/logo.png";
 interface MenuCardProps {
   id: number;
   title: string;
