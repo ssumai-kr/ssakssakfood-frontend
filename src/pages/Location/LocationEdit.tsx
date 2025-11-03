@@ -39,7 +39,7 @@ export default function LocationEdit() {
     patchLocation.mutate(id, {
       onSuccess: () => {
         const selected = myLocationData?.find(
-          (i: myLocationResponseDto) => i.userLocationId === id,
+          (i: myLocationResponseDto) => i.userLocationId === id
         );
         console.log(selected);
         if (selected) {
@@ -52,7 +52,7 @@ export default function LocationEdit() {
           // console.log(cacheData);
           sessionStorage.setItem(
             "cached_geolocation",
-            JSON.stringify(cacheData),
+            JSON.stringify(cacheData)
           );
         }
         // alert("대표 위치가 변경되었습니다.");
@@ -62,7 +62,7 @@ export default function LocationEdit() {
   console.log(myLocationData, "겟");
 
   const notPrimary = myLocationData?.filter(
-    (item: myLocationResponseDto) => !item.isPrimary,
+    (item: myLocationResponseDto) => !item.isPrimary
   );
   console.log(notPrimary, "p아닌거");
 
@@ -114,22 +114,24 @@ export default function LocationEdit() {
               {isEdit ? "수정" : "저장"}
             </button>
           </div>
-          {notPrimary?.map((item: myLocationResponseDto) => {
-            const responseBulidingName =
-              item?.buildingName === null ? "현재 위치" : item?.buildingName;
-            return (
-              <Location
-                key={item.userLocationId}
-                jibunAddress={item.jibunAddress}
-                buildingName={responseBulidingName}
-                editMode={!isEdit}
-                userLocationId={Number(item?.userLocationId)}
-                onClick={() => {
-                  handlePatchLocation(item.userLocationId);
-                }}
-              />
-            );
-          })}
+          <div className="flex flex-col gap-2">
+            {notPrimary?.map((item: myLocationResponseDto) => {
+              const responseBulidingName =
+                item?.buildingName === null ? "현재 위치" : item?.buildingName;
+              return (
+                <Location
+                  key={item.userLocationId}
+                  jibunAddress={item.jibunAddress}
+                  buildingName={responseBulidingName}
+                  editMode={!isEdit}
+                  userLocationId={Number(item?.userLocationId)}
+                  onClick={() => {
+                    handlePatchLocation(item.userLocationId);
+                  }}
+                />
+              );
+            })}
+          </div>
         </section>
       ) : (
         <div className="text-center mt-5">
